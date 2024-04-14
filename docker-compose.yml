@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  drogon:
+    # test用のイメージ
+    # 本番用に体裁を整えて作る必要あり
+    image: sotta/kousen_basic_research
+    container_name: kousen
+    logging:
+      driver: json-file
+    tty: true
+    # ポートの設定
+    # なんかデフォルトは5555やった。いみふ5555は多分使わん
+    ports:
+      - "80:80"
+    # コンテナ内のディレクトリとマウント
+    # 試験的にhome直下にプロジェクト作成
+    volumes:
+      - .:/home/work
