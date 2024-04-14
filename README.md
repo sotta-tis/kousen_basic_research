@@ -43,7 +43,7 @@ $ docker-compose up -d
 ```
 
 3. dockerコンテナにアタッチ
-コンテナのなかに入ってわいが作ったシェルスクリプトを実行するんや（シェルスクリプトこっちはつくってない）
+コンテナのなかに入ってわいが作ったシェルスクリプトを実行する
  ```shell
 $ docker compose exec drogon bash
 ```
@@ -52,12 +52,18 @@ $ docker compose exec drogon bash
 
 projectのビルド
 
-これダメとばして下のやつ手動でやる
+シェルスクリプト使用
 
 ```shell
-# build.sh
+# ビルドだけ、デプロイなし
+$ build.sh
+# ビルド、デプロイ
+$ debug.sh
 ```
 
+手動でのデプロイ
+
+projectのbuildまでいってからcmake .. && make する
 ```shell
 # cd /home/work/kousen/build/
 # cmake ..
