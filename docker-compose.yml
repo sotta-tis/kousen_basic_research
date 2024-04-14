@@ -4,7 +4,7 @@ services:
   drogon:
     # test用のイメージ
     # 本番用に体裁を整えて作る必要あり
-    image: sotta/kousen_basic_research
+    image: sotta/kousen_basic_research:latest
     container_name: kousen
     logging:
       driver: json-file
