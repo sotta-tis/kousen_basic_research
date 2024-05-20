@@ -1,0 +1,11 @@
+<!-- views/IndexView.csp -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Index Page</title>
+</head>
+<body>
+    <h1>Welcome to the Index Page!</h1>
+</body>
+</html>
+

@@ -71,5 +71,6 @@ target_sources(${PROJECT_NAME}
 # set_property(TARGET ${PROJECT_NAME} PROPERTY ENABLE_EXPORTS ON)
 
 # ##############################################################################
+drogon_create_views(kousen ${CMAKE_CURRENT_SOURCE_DIR}/views)
 
 add_subdirectory(test)
