@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title><% if(!title.empty()) out << title; else out << "Sushi Order"; %></title>
+    <link rel="stylesheet" type="text/css" href="/public/css/layout.css">
+</head>
+<body>
+    <div class="header">
+        <a href="/">ホーム</a>
+        <a href="/menu">メニュー</a>
+        <a href="/history">履歴</a>
+        <a href="/checkout">会計</a>
+    </div>
+    <div class="content">
+       [[]]
+    </div>
+</body>
+</html>
