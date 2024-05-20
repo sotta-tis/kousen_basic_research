@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <%c++
+int a=1;
 	// name 変数にパラメータからnameで識別される値を指定の型で取得
     auto viewName=@@.get<std::string>("name");
 	bool nameIsEmpty = viewName == "";
@@ -13,9 +14,11 @@
     <title>{% viewName %}</title>
 </head>
 <body>
-
 <center>
 	<h1>すしすし</h1>
+	<%c++ if(a==0){%> <%view hey %> <%c++ }%>
+	<%c++ if(a==1){%> <%view hi %> <%c++ }%>
+
 </center>
 
 
