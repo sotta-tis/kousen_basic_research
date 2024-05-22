@@ -559,7 +559,9 @@ FodyWeavers.xsd
 *.tlog
 
 # buildの中身を無視
-/build/
+/build/*
+!/build/public
 !/build/.gitkeep
+!/build/public/css/.gitkeep
 
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,visualstudio,visualstudiocode,cmake,c,c++
