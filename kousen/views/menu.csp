@@ -6,25 +6,25 @@
     <div class="menu-item">
         <button class="sushi-button" onclick="openModal('Maguro')">
             <img src="/public/src/maguro.png" alt="マグロ">
-            <p>マグロ ¥1200</p>
+            <p>マグロ ¥120</p>
         </button>
     </div>
     <div class="menu-item">
         <button class="sushi-button" onclick="openModal('Salmon')">
             <img src="/public/src/salmon.png" alt="サーモン">
-            <p>サーモン ¥1300</p>
+            <p>サーモン ¥130</p>
         </button>
     </div>
     <div class="menu-item">
         <button class="sushi-button" onclick="openModal('Ikura')">
             <img src="/public/src/ikura.png" alt="いくら">
-            <p>いくら ¥1500</p>
+            <p>いくら ¥150</p>
         </button>
     </div>
     <div class="menu-item">
         <button class="sushi-button" onclick="openModal('Ika')">
             <img src="/public/src/ika.png" alt="いか">
-            <p>いか ¥1100</p>
+            <p>いか ¥110</p>
         </button>
     </div>
 
@@ -37,9 +37,9 @@
         <h2 id="modalTitle"></h2>
         <div class="quantity-buttons">
             <button data-quantity="1" onclick="selectQuantity(1)">1皿</button>
-            <button data-quantity="2" onclick="selectQuantity(2)">2皿</button>
-            <button data-quantity="3" onclick="selectQuantity(3)">3皿</button>
-            <button data-quantity="4" onclick="selectQuantity(4)">4皿</button>
+            <button data-quantity="2" onclick="selectQuantity(2)" disabled=true>2皿</button>
+            <button data-quantity="3" onclick="selectQuantity(3)" disabled=true>3皿</button>
+            <button data-quantity="4" onclick="selectQuantity(4)" disabled=true>4皿</button>
         </div>
         <button class="final-order-button">注文する</button>
     </div>

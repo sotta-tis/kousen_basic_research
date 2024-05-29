@@ -54,10 +54,12 @@
 
 .modal-content {
     background-color: #fefefe;
-    margin: 15% auto;
-    padding: 20px;
     border: 1px solid #888;
-    width: 80%;
+    height: 90vh; /* ビューポートの高さの90%を使用 */
+    overflow-y: auto; /* コンテンツがオーバーフローした場合に縦方向のスクロールを許可 */
+    width: 80%; /* 幅はビューポートの80% */
+    padding: 20px;
+    margin: 5vh auto 0 auto; /* 上部にビューポートの高さの5%のマージンを設置 */
 }
 
 .close {
@@ -104,5 +106,4 @@
     background-color: #4CAF50; /* 選択されたときの色 */
     color: white;
 }
-
 
