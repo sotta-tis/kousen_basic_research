@@ -14,6 +14,7 @@ class indexController : public drogon::HttpController<indexController>
     ADD_METHOD_TO(indexController::menu, "/menu", Get);
     ADD_METHOD_TO(indexController::history, "/history", Get);
     ADD_METHOD_TO(indexController::checkout, "/checkout", Get);
+    ADD_METHOD_TO(indexController::menu, "/order", Get);
     // ADD_METHOD_TO(indexController::your_method_name, "/absolute/path/{1}/{2}/list", Get); // path is /absolute/path/{arg1}/{arg2}/list
 
     METHOD_LIST_END
