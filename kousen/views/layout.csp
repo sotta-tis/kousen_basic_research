@@ -5,6 +5,7 @@
     <link rel="stylesheet" type="text/css" href="/public/css/layout.css">
 </head>
 <body>
+<div class="body">
     <div class="header">
         <a href="/">ホーム</a>
         <a href="/menu">メニュー</a>
@@ -14,5 +15,7 @@
     <div class="content">
        [[]]
     </div>
+
+</div>
 </body>
 </html>

@@ -1,0 +1,108 @@
+.content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.menu-item {
+    width: 48%; /* 要素を2列にするための設定 */
+    margin-bottom: 20px;
+}
+
+.sushi-button {
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1; /* 正方形に近く */
+}
+
+.sushi-button img {
+    max-width: 80%;
+    height: auto;
+    margin-bottom: 10px; /* 画像とテキストの間隔 */
+}
+
+.sushi-button p {
+    margin: 5px 0;
+    font-size: 20px;
+    color: #333;
+}
+
+.sushi-button:hover {
+    background-color: #e8e8e8;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: black;
+}
+
+.final-order-button {
+    background-color: #008CBA;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin-top: 20px;
+}
+
+.final-order-button:hover {
+    background-color: #007BAA;
+}
+
+.quantity-buttons button {
+    padding: 10px 20px;
+    margin: 5px;
+    background-color: #f0f0f0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.quantity-buttons button:hover {
+    background-color: #e0e0e0;
+}
+
+.quantity-buttons button.selected {
+    background-color: #4CAF50; /* 選択されたときの色 */
+    color: white;
+}
+
+
