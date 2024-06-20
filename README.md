@@ -73,7 +73,7 @@ projectのbuildまでいってからcmake .. && make する
 
 シェルスクリプトやらんと↑これやる
 
-4. localhost:80に接続
+4. localhost:8085接続
 
 これがでたらおけ
 ![スクリーンショット 2024-04-14 200006](https://github.com/sotta-tis/kousen_test/assets/104351502/441b7870-364d-49d4-b70f-a0ce33a11b9b)
