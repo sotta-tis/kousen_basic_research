@@ -24,7 +24,7 @@ services:
     build: ./kousen/postgres/
     restart: always
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - db:/var/lib/postgresql/data
       - ./kousen/postgres/init:/docker-entrypoint-initdb.d
@@ -32,5 +32,20 @@ services:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASS}
 
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    ports:
+      - 8088:80
+    volumes:
+      - pgad:/var/lib/pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGAD_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGAD_PASS}
+    depends_on:
+      - postgres
+
+
 volumes:
   db:
+  pgad:
