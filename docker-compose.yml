@@ -13,6 +13,9 @@ services:
     # なんかデフォルトは5555やった。いみふ5555は多分使わん
     ports:
       - "8085:80"
+    # コンテナ内から"host.docker.internal"でホストのlocalhostに接続
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     # コンテナ内のディレクトリとマウント
     # 試験的にhome直下にプロジェクト作成
     volumes:
@@ -38,7 +41,7 @@ services:
     ports:
       - 8088:80
     volumes:
-      - pgad:/var/lib/pgadmin
+      - pgadmin:/var/lib/pgadmin
     environment:
       - PGADMIN_DEFAULT_EMAIL=${PGAD_EMAIL}
       - PGADMIN_DEFAULT_PASSWORD=${PGAD_PASS}
@@ -48,4 +51,4 @@ services:
 
 volumes:
   db:
-  pgad:
+  pgadmin:
