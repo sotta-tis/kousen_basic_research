@@ -1,0 +1,9 @@
+<%layout layout.csp %>
+
+<link rel="stylesheet" type="text/css" href="/public/css/menu.css">
+
+
+<h1>Admin
+</h1>
+
+<script src="/public/js/menu.js"></script>
