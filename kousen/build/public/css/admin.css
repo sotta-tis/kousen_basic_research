@@ -2,17 +2,59 @@ body {
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     background-color: #ffffff;
     color: #333333;
     margin: 0;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
+.container {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    align-items: flex-start;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
 
-h1 {
+.left-panel {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    margin-right: 20px;
+}
+
+.right-panel {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-row {
+    display: flex;
+    width: 100%;
     margin-bottom: 20px;
-    font-size: 24px;
-    color: #444444;
+}
+
+.form-column {
+    flex: 1;
+    margin-right: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-column:last-child {
+    margin-right: 0;
+}
+
+h2 {
+    margin-top: 0;
 }
 
 label {
@@ -53,7 +95,7 @@ button:hover {
     border: 1px solid #cccccc;
     border-radius: 4px;
     background-color: #f8f8f8;
-    height: 100px; /* 縦の表示領域を確保 */
+    height: 150px; /* 縦の表示領域を確保 */
     overflow-y: auto;
     font-size: 14px;
 }
