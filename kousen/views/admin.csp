@@ -1,9 +1,26 @@
-<%layout layout.csp %>
-
-<link rel="stylesheet" type="text/css" href="/public/css/menu.css">
-
-
-<h1>Admin
-</h1>
-
-<script src="/public/js/menu.js"></script>
+<!DOCTYPE html>
+<html lang="en">
+<%c++
+    auto DobotHost=@@.get<std::string>("DOBOT_HOST");
+    auto DobotPort=@@.get<std::string>("DOBOT_PORT");
+%>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" type="text/css" href="/public/css/admin.css">
+</head>
+<body>
+      <div class="container">
+            <form id="connectionForm" action="/admin/set">
+                <label for="ipAddress">IP Address: {% DobotHost %}</label>
+                <input type="text" id="ipAddress" name="ipAddress" required>
+                <label for="port">Port: {% DobotPort %}</label>
+                <input type="number" id="port" name="port" required>
+                <button type="submit">Submit</button>
+            </form>
+            <div id="response" class="response-area"></div>
+      </div>
+    <script src="/public/js/menu.js"></script>
+</body>
+</html>

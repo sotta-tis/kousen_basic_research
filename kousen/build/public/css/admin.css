@@ -1,0 +1,59 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #ffffff;
+    color: #333333;
+    margin: 0;
+}
+
+
+h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #444444;
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+    color: #555555;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+.response-area {
+    margin-top: 20px;
+    padding: 10px;
+    border: 1px solid #cccccc;
+    border-radius: 4px;
+    background-color: #f8f8f8;
+    height: 100px; /* 縦の表示領域を確保 */
+    overflow-y: auto;
+    font-size: 14px;
+}
