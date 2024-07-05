@@ -1,4 +1,5 @@
 #include "adminController.h"
+#include "socketComunication.h"
 
 // Add definition of your processing function here
 
@@ -23,8 +24,10 @@ void adminController::setHostDetail(const drogon::HttpRequestPtr &req,
                                     std::function<void(const HttpResponsePtr &)> &&callback) {
     // Dobotのipアドレスとportを更新
     adminController::DOBOT_HOST = req->getParameter("ipAddress");
-    adminController::DOBOT_PORT = req->getParameter("port");
+    adminController::DOBOT_PORT = std::stoi(req->getParameter("port"));
 
+    // 通信
+    sockC::setting(adminController::DOBOT_HOST,adminController::DOBOT_PORT);
     // "/admin"にリダイレクト
     auto resp = HttpResponse::newHttpResponse();
     resp->setStatusCode(drogon::k302Found);
@@ -34,10 +37,10 @@ void adminController::setHostDetail(const drogon::HttpRequestPtr &req,
 
 void adminController::doDobot(const drogon::HttpRequestPtr &req,
                               std::function<void(const HttpResponsePtr &)> &&callback) {
-    adminController::D_M_x = req->getParameter("x");
-    adminController::D_M_y = req->getParameter("y");
-    adminController::D_M_z = req->getParameter("z");
-    adminController::D_M_r = req->getParameter("r");
+    adminController::D_M_x = std::stoi(req->getParameter("x"));
+    adminController::D_M_y = std::stoi(req->getParameter("y"));
+    adminController::D_M_z = std::stoi(req->getParameter("z"));
+    adminController::D_M_r = std::stoi(req->getParameter("r"));
 
     // "/admin"にリダイレクト
     auto resp = HttpResponse::newHttpResponse();

@@ -42,38 +42,24 @@ void sockC::send_command(const std::string& command, const std::string& host , i
     close(sock);
 
 }
-void sockC::moveArmParam(int x, int y, int z,std::string host,int port) {
+
+void sockC::setting(std::string host, int port) {
     // 接続確認
     json command;
     command["command"] = "Ping";
     std::string command_str = command.dump();
     sockC::send_command(command_str,host,port);
+}
 
-    // よーわからん
-    command["command"] = "SetCordinateSpeed";
-    command["velocity"] = 20;
-    command["jerk"] = 3;
-    command_str = command.dump();
-    sockC::send_command(command_str,host,port);
-
-    // 高さ？
-    json com1;
-    com1["command"] = "SetJumpPram";
-    com1["height"] = 50;
-    com1["zlimit"] = 185;
-    command_str = com1.dump();
-    sockC::send_command(command_str,host,port);
-
+void sockC::moveArmParam(int x, int y, int z,int r,std::string host,int port) {
     json com2;
     com2["command"] = "JumpTo";
     com2["x"] = x;
     com2["y"] = y;
     com2["z"] = z;
-    com2["r"] = 0;
-    command_str = com2.dump();
-    send_command(command_str,host,port);
-
-
+    com2["r"] = r;
+    std::string command_str = com2.dump();
+    sockC::send_command(command_str,host,port);
 }
 
 //

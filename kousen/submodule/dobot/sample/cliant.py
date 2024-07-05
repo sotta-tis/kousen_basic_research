@@ -4,8 +4,8 @@ import dobot
 if __name__ == '__main__':
 
     #HOST = '192.168.33.40'
-    HOST = '10.133.1.121'
-    PORT=8867
+    HOST = 'localhost'
+    PORT=8893
 
     logging.basicConfig(format='[%(levelname)s] %(asctime)s: %(message)s')
     logging.getLogger('DobotCommandSender').setLevel(logging.DEBUG)
