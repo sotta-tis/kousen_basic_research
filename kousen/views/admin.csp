@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ja">
 <%c++
     auto DobotHost=@@.get<std::string>("DOBOT_HOST");
     auto DobotPort=@@.get<int>("DOBOT_PORT");
@@ -13,6 +13,14 @@
 <body>
     <div class="container">
         <div class="left-panel">
+            <div class="form-row">
+                <div class="form-column">
+                <h2>PID: {% @@.get<int>("PID") %}</h2>
+                <form action="/admin/kill" method="get">
+                    <button type="submit">シャットダウン</button>
+                </form>
+                </div>
+            </div>
             <div class="form-row">
                 <div class="form-column">
                     <h2>Dobot Settings</h2>
