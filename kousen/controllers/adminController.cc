@@ -49,6 +49,9 @@ void adminController::doDobot(const drogon::HttpRequestPtr &req,
     adminController::D_M_z = std::stoi(req->getParameter("z"));
     adminController::D_M_r = std::stoi(req->getParameter("r"));
 
+    // DOBOTのアームを任意座標に移動
+    sockC::moveArmParam(adminController::D_M_x,adminController::D_M_y,adminController::D_M_z,adminController::D_M_r,adminController::DOBOT_HOST,adminController::DOBOT_PORT);
+
     // "/admin"にリダイレクト
     auto resp = HttpResponse::newHttpResponse();
     resp->setStatusCode(drogon::k302Found);
