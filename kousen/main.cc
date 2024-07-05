@@ -1,5 +1,9 @@
 #include <drogon/drogon.h>
+
+#include"controllers/killProcess.h"
+
 int main() {
+    std::cout<<killPro::pid<<std::endl;
     //Set HTTP listener address and port
     drogon::app().addListener("0.0.0.0", 80);
     //Load config file
