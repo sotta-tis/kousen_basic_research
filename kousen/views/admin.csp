@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ja">
+<%c++
+    auto DobotHost=@@.get<std::string>("DOBOT_HOST");
+    auto DobotPort=@@.get<int>("DOBOT_PORT");
+%>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel</title>
+    <link rel="stylesheet" type="text/css" href="/public/css/admin.css">
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <div class="form-row">
+                <div class="form-column">
+                <h2>PID: {% @@.get<int>("PID") %}</h2>
+                <form action="/admin/kill" method="get">
+                    <button type="submit">シャットダウン</button>
+                </form>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-column">
+                    <h2>Dobot Settings</h2>
+                    <form id="connectionForm" action="/admin/dobot/set">
+                        <label for="ipAddress">IP Address: {% DobotHost %}</label>
+                        <input type="text" id="ipAddress" name="ipAddress" required>
+                        <label for="port">Port: {% DobotPort %}</label>
+                        <input type="number" id="port" name="port" required>
+                        <button type="submit">Submit</button>
+                    </form>
+                </div>
+                <div class="form-column">
+                    <h2>Dobot Control</h2>
+                    <form id="manualForm" action="admin/dobot/do">
+                        <label for="x">X: {% @@.get<int>("x") %}</label>
+                        <input type="number" id="x" name="x" required>
+                        <label for="y">Y: {% @@.get<int>("y") %}</label>
+                        <input type="number" id="y" name="y" required>
+                        <label for="z">Z: {% @@.get<int>("z") %}</label>
+                        <input type="number" id="z" name="z" required>
+                        <label for="r">R: {% @@.get<int>("r") %}</label>
+                        <input type="number" id="r" name="r" required>
+                        <button type="submit">Send Command</button>
+                    </form>
+                </div>
+            </div>
+            <div class="form-row">
+            <div class="form-column">
+                <h2>System Settings</h2>
+                <form id="systemSettingsForm" action="/system/settings">
+                    <label for="systemParam">System Parameter:</label>
+                    <input type="text" id="systemParam" name="systemParam" required>
+                    <button type="submit">Submit</button>
+                </form>
+                </div>
+            </div>
+        </div>
+        <div class="right-panel">
+            <div class="response-area" id="response"></div>
+            <div class="response-area" id="controlResponse"></div>
+            <div class="response-area" id="systemResponse"></div>
+        </div>
+    </div>
+    <script src="/public/js/menu.js"></script>
+</body>
+</html>

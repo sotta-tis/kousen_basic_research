@@ -4,7 +4,7 @@ import dobot
 if __name__ == '__main__':
 
     #HOST = '192.168.33.40'
-    HOST = '127.0.0.1'
+    HOST = 'localhost'
     PORT=8893
 
     logging.basicConfig(format='[%(levelname)s] %(asctime)s: %(message)s')
