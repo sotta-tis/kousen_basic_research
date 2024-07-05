@@ -22,7 +22,11 @@ public:
     ADD_METHOD_TO(adminController::adminIndex, "/admin", Get); // path is /absolute/path/{arg1}/{arg2}/list
     ADD_METHOD_TO(adminController::setHostDetail, "/admin/dobot/set", Get);
     ADD_METHOD_TO(adminController::doDobot, "/admin/dobot/do", Get);
+    ADD_METHOD_TO(adminController::shutDown, "/admin/kill", Get);
     METHOD_LIST_END
+
+    // システムシャットダウン
+    void shutDown(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
 
     // http response method
     void adminIndex(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);

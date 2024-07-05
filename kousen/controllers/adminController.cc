@@ -1,5 +1,6 @@
 #include "adminController.h"
 #include "socketComunication.h"
+#include "killProcess.h"
 
 // Add definition of your processing function here
 
@@ -8,6 +9,7 @@ void adminController::adminIndex(const drogon::HttpRequestPtr &req,
                                  &&callback) {
     // viewData梱包
     drogon::HttpViewData viewData;
+    viewData.insert("PID",killPro::pid);
     viewData.insert("DOBOT_HOST",adminController::DOBOT_HOST);
     viewData.insert("DOBOT_PORT",adminController::DOBOT_PORT);
     viewData.insert("x",adminController::D_M_x);
@@ -18,6 +20,11 @@ void adminController::adminIndex(const drogon::HttpRequestPtr &req,
     // コールバック
     auto resp = HttpResponse::newHttpViewResponse("admin.csp",viewData);
     callback(resp);
+}
+
+void adminController::shutDown(const drogon::HttpRequestPtr &req,
+                               std::function<void(const HttpResponsePtr &)> &&callback) {
+    killPro::killProcess();
 }
 
 void adminController::setHostDetail(const drogon::HttpRequestPtr &req,
