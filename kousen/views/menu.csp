@@ -33,7 +33,7 @@
 <div id="orderModal" class="modal">
     <div class="modal-content">
         <span class="close">&times;</span>
-        <img id="modalImage" src="" alt="Selected Sushi" style="width: 80%; margin: auto;"> <!-- 対応する寿司の写真を表示 -->
+        <img id="modalImage" src="" alt="Selected Sushi" style="width: 50%; margin: auto;"> <!-- 対応する寿司の写真を表示 -->
         <h2 id="modalTitle"></h2>
         <div class="quantity-buttons">
             <button data-quantity="1" onclick="selectQuantity(1)">1皿</button>
