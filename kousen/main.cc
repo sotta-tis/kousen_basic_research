@@ -12,7 +12,7 @@ int main() {
     //drogon::app().loadConfigFile("../config.yaml");
     //Run HTTP framework,the method will block in the internal event loop
     drogon::app()
-            .enableSession(1)
+            .enableSession(100000)
             .run();
     return 0;
 }

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="Content-Style-Type" content="text/css">
+    <meta http-equiv="pragma" content="no-cache">
+    <meta http-equiv="cache-control" content="no-cache">
+
+    <meta name="description" content="DrogonのCSS利用サンプル">
+    <meta name="keywords" content="Drogon,CSS,MVCフレームワーク,C++,高速">
+    <meta name="Mizinko-Kinako" content="MKnote">
+    <meta name="copyright" content="Mizinko-Kinako">
+    <meta charset="UTF-8">
+    <title>サンプルLogin</title>
+</head>
+
+<body>
+    <form action="/submit" method="post">
+        <p>
+            <label>ログインID：</label>
+            <input type="text" name="loginID" placeholder="IDを入れてください" />
+        </p>
+        <p>
+            <label>パスワード：</label>
+            <input type="password" name="passWord" placeholder="パスワードを入れてください" />
+        </p>
+        <p>
+            <label>パスワード：</label>
+            <input type="password" name="validation" placeholder="同じパスワードを入れてください" />
+        </p>
+        <p>
+            <button type="submit">登録</button>
+        </p>
+    </form>
+</body>
+</html>
