@@ -8,27 +8,24 @@
 void adminController::admin(const HttpRequestPtr &req,
                             std::function<void(const HttpResponsePtr &)> &&callback) const
 {
-    bool loginState = false;
+    callback(adminController::loginFilter(req,adminController::adminIndex()));
+}
 
+drogon::HttpResponsePtr adminController::loginFilter(const HttpRequestPtr &req,drogon::HttpResponsePtr requiredRes)const{
+    bool loginState = false;
+    // login失敗時のビューデータ作成
     auto viewData = drogon::HttpViewData();
     viewData.insert("message", std::string(""));
-    drogon::HttpResponsePtr response =
-            drogon::HttpResponse::newHttpViewResponse("login.csp", viewData);
+    drogon::HttpResponsePtr response =drogon::HttpResponse::newHttpViewResponse("login.csp", viewData);
 
     // セッションからログイン済みか判断
     drogon::SessionPtr sessionHolder = req->getSession();
-    if(sessionHolder->find("loginState"))
-    {
-        loginState = sessionHolder->getOptional<bool>("loginState").value_or(false);
-    }
+    if(sessionHolder->find("loginState")) loginState = sessionHolder->getOptional<bool>("loginState").value_or(false);
 
     // ログイン済みであればそのままadmin画面を表示
-    if (loginState)
-    {
-        response = adminController::adminIndex();
-    }
+    if (loginState) response = requiredRes;
 
-    callback(response);
+    return response;
 }
 
 drogon::HttpResponsePtr adminController::adminIndex()const {

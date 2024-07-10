@@ -48,4 +48,6 @@ public:
     void login(const HttpRequestPtr &req,std::function<void(const HttpResponsePtr &)> &&callback) const;
 
     std::string getStoredDigest(std::string userID) const;
+
+    drogon::HttpResponsePtr loginFilter(const HttpRequestPtr &req,drogon::HttpResponsePtr requiredRes)const;
 };
