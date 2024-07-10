@@ -28,6 +28,7 @@ drogon::HttpResponsePtr adminController::loginFilter(const HttpRequestPtr &req,d
     return response;
 }
 
+// 管理画面のレスポンスを作成
 drogon::HttpResponsePtr adminController::adminIndex()const {
     // viewData梱包
     drogon::HttpViewData viewData;
@@ -45,39 +46,60 @@ drogon::HttpResponsePtr adminController::adminIndex()const {
 
 void adminController::shutDown(const drogon::HttpRequestPtr &req,
                                std::function<void(const HttpResponsePtr &)> &&callback) {
-    killPro::killProcess();
+    // "/admin/kill"にリダイレクト
+    auto resp = HttpResponse::newHttpResponse();
+    resp->setStatusCode(drogon::k302Found);
+    resp -> addHeader("Location", "/admin");
+
+    auto response = adminController::loginFilter(req,resp);
+
+    if(response == resp){
+        killPro::killProcess();
+    }
+    callback(response);
 }
 
 void adminController::setHostDetail(const drogon::HttpRequestPtr &req,
                                     std::function<void(const HttpResponsePtr &)> &&callback) {
-    // Dobotのipアドレスとportを更新
-    adminController::DOBOT_HOST = req->getParameter("ipAddress");
-    adminController::DOBOT_PORT = std::stoi(req->getParameter("port"));
-
-    // 通信
-    sockC::setting(adminController::DOBOT_HOST,adminController::DOBOT_PORT);
     // "/admin"にリダイレクト
     auto resp = HttpResponse::newHttpResponse();
     resp->setStatusCode(drogon::k302Found);
     resp -> addHeader("Location", "/admin");
-    callback(resp);
+
+    auto response = adminController::loginFilter(req,resp);
+
+    if(response == resp){
+        // Dobotのipアドレスとportを更新
+        adminController::DOBOT_HOST = req->getParameter("ipAddress");
+        adminController::DOBOT_PORT = std::stoi(req->getParameter("port"));
+
+        // 通信
+        sockC::setting(adminController::DOBOT_HOST,adminController::DOBOT_PORT);
+    }
+
+    callback(response);
 }
 
 void adminController::doDobot(const drogon::HttpRequestPtr &req,
                               std::function<void(const HttpResponsePtr &)> &&callback) {
-    adminController::D_M_x = std::stoi(req->getParameter("x"));
-    adminController::D_M_y = std::stoi(req->getParameter("y"));
-    adminController::D_M_z = std::stoi(req->getParameter("z"));
-    adminController::D_M_r = std::stoi(req->getParameter("r"));
-
-    // DOBOTのアームを任意座標に移動
-    sockC::moveArmParam(adminController::D_M_x,adminController::D_M_y,adminController::D_M_z,adminController::D_M_r,adminController::DOBOT_HOST,adminController::DOBOT_PORT);
-
     // "/admin"にリダイレクト
     auto resp = HttpResponse::newHttpResponse();
     resp->setStatusCode(drogon::k302Found);
     resp -> addHeader("Location", "/admin");
-    callback(resp);
+
+    auto response = adminController::loginFilter(req,resp);
+
+    if(response == resp){
+        adminController::D_M_x = std::stoi(req->getParameter("x"));
+        adminController::D_M_y = std::stoi(req->getParameter("y"));
+        adminController::D_M_z = std::stoi(req->getParameter("z"));
+        adminController::D_M_r = std::stoi(req->getParameter("r"));
+
+        // DOBOTのアームを任意座標に移動
+        sockC::moveArmParam(adminController::D_M_x,adminController::D_M_y,adminController::D_M_z,adminController::D_M_r,adminController::DOBOT_HOST,adminController::DOBOT_PORT);
+    }
+
+    callback(response);
 }
 
 // 新規ユーザー登録画面
