@@ -54,6 +54,7 @@ void adminController::shutDown(const drogon::HttpRequestPtr &req,
     auto response = adminController::loginFilter(req,resp);
 
     if(response == resp){
+        sockC::quit(adminController::DOBOT_HOST,adminController::DOBOT_PORT);
         killPro::killProcess();
     }
     callback(response);
