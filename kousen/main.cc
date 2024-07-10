@@ -1,4 +1,5 @@
 #include <drogon/drogon.h>
+#include <chrono>
 
 #include"controllers/killProcess.h"
 
@@ -10,6 +11,8 @@ int main() {
     drogon::app().loadConfigFile("../config.json");
     //drogon::app().loadConfigFile("../config.yaml");
     //Run HTTP framework,the method will block in the internal event loop
-    drogon::app().run();
+    drogon::app()
+            .enableSession(100000)
+            .run();
     return 0;
 }
