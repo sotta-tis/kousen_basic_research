@@ -68,6 +68,13 @@ void sockC::moveArmParam(int x, int y, int z,int r,std::string host,int port) {
     sockC::send_command(command_str,host,port);
 }
 
+void sockC::quit(std::string host, int port) {
+    json command;
+    command["command"] = "Quit";
+    std::string command_str = command.dump();
+    sockC::send_command(command_str,host,port);
+}
+
 //
 // Created by 年澄荘多 on 24/07/03.
 //
