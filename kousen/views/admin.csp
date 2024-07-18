@@ -64,6 +64,6 @@
             <div class="response-area" id="systemResponse"></div>
         </div>
     </div>
-    <script src="/public/js/menu.js"></script>
+    <script src="/public/js/admin.js"></script>
 </body>
 </html>
