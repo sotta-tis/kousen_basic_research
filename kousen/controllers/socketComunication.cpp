@@ -1,4 +1,4 @@
-#include "socketComunication.h"
+#include "socketCommunication.h"
 
 #include <iostream>
 #include <string>
