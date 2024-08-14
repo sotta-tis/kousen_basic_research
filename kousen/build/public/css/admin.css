@@ -77,7 +77,7 @@ input {
 button {
     width: 100%;
     padding: 10px;
-    background-color: #4caf50;
+    background-color: #333;
     color: white;
     border: none;
     border-radius: 4px;
@@ -86,7 +86,7 @@ button {
 }
 
 button:hover {
-    background-color: #45a049;
+    background-color: #c0c0c0;
 }
 
 .response-area {
@@ -98,4 +98,14 @@ button:hover {
     height: 150px; /* 縦の表示領域を確保 */
     overflow-y: auto;
     font-size: 14px;
+}
+
+form#manualForm input{
+    display:inline-block;
+    margin-right:20px;
+    width: 80px;
+}
+
+form#manualForm div{
+    display: block;
 }
