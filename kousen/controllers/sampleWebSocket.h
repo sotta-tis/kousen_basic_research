@@ -4,7 +4,7 @@
 
 using namespace drogon;
 
-class SimpleWebSocket : public WebSocketController<SimpleWebSocket>
+class SampleWebSocket : public WebSocketController<SampleWebSocket>
 {
     public:
     void handleNewMessage(const WebSocketConnectionPtr& connPtr,

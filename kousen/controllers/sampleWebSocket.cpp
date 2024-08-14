@@ -1,7 +1,7 @@
-#include "SimpleWebSocket.h"
+#include "sampleWebSocket.h"
 #include <drogon/drogon.h>
 
-void SimpleWebSocket::handleNewMessage(const WebSocketConnectionPtr& connPtr,
+void SampleWebSocket::handleNewMessage(const WebSocketConnectionPtr& connPtr,
                                        std::string&& message,
                                        const WebSocketMessageType& type)
 {
@@ -11,13 +11,13 @@ void SimpleWebSocket::handleNewMessage(const WebSocketConnectionPtr& connPtr,
     }
 }
 
-void SimpleWebSocket::handleNewConnection(const HttpRequestPtr& req,
+void SampleWebSocket::handleNewConnection(const HttpRequestPtr& req,
                                           const WebSocketConnectionPtr& connPtr)
 {
     LOG_INFO << "New WebSocket connection";
 }
 
-void SimpleWebSocket::handleConnectionClosed(const WebSocketConnectionPtr& connPtr)
+void SampleWebSocket::handleConnectionClosed(const WebSocketConnectionPtr& connPtr)
 {
     LOG_INFO << "WebSocket connection closed";
 }

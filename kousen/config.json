@@ -108,7 +108,7 @@
             "handlers": [
                 {
                     "path": "/echo",  // WebSocketのエンドポイント
-                    "handler": "SimpleWebSocket"  // 対応するWebSocketハンドラのクラス名
+                    "handler": "SampleWebSocket"  // 対応するWebSocketハンドラのクラス名
                 },
             ]
         },
