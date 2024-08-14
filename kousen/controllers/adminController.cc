@@ -1,5 +1,5 @@
 #include "adminController.h"
-#include "socketComunication.h"
+#include "socketCommunication.h"
 #include "killProcess.h"
 #include  "loginUtility.h"
 
