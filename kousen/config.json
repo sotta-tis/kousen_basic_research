@@ -110,6 +110,10 @@
                     "path": "/echo",  // WebSocketのエンドポイント
                     "handler": "SampleWebSocket"  // 対応するWebSocketハンドラのクラス名
                 },
+                {
+                    "path": "/admi",
+                    "handler": "adminWebSocket"
+                }
             ]
         },
         //log: ログ出力を設定します。drogonはデフォルトで標準出力にログを出力します。
