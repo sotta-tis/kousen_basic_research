@@ -19,7 +19,7 @@ public:
     void handleConnectionClosed(const WebSocketConnectionPtr& connPtr) override;
 
     WS_PATH_LIST_BEGIN
-    WS_PATH_ADD("/admi", Get);
+    WS_PATH_ADD("/admin", Get);
     WS_PATH_LIST_END
 
 };
