@@ -1,7 +1,8 @@
 #include "adminController.h"
 #include "socketCommunication.h"
 #include "killProcess.h"
-#include  "loginUtility.h"
+#include "loginUtility.h"
+#include "commonData.h"
 
 // Add definition of your processing function here
 // admin画面

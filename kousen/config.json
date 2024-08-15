@@ -103,6 +103,19 @@
             //文字列内の有効数字の最大数を設定します。"decimal" は小数点後の桁数の最大数を設定します。
             "precision_type": "significant"
         },
+        "static_files_cache_time": 86400,  // 静的ファイルのキャッシュ時間（秒）
+        "websocket": {
+            "handlers": [
+                {
+                    "path": "/echo",  // WebSocketのエンドポイント
+                    "handler": "SampleWebSocket"  // 対応するWebSocketハンドラのクラス名
+                },
+                {
+                    "path": "/admin",
+                    "handler": "adminWebSocket"
+                }
+            ]
+        },
         //log: ログ出力を設定します。drogonはデフォルトで標準出力にログを出力します。
         "log": {
             //use_spdlog: spdlogライブラリを使用してログを記録します。

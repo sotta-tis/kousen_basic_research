@@ -1,9 +1,38 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Home Page</title>
+    <meta charset="UTF-8">
+    <title>WebSocket Test</title>
 </head>
 <body>
-<h1>Welcome to the Home Page!</h1>
+<h1>WebSocket Test</h1>
+<input type="text" id="messageInput" placeholder="Enter message">
+<button onclick="sendMessage()">Send</button>
+<p id="messages"></p>
+
+<script>
+    var ws = new WebSocket('ws://localhost:8085/echo');
+
+    ws.onopen = function() {
+        console.log('WebSocket connection established');
+    };
+
+    ws.onmessage = function(event) {
+        var messages = document.getElementById('messages');
+        messages.innerHTML += '<p>' + event.data + '</p>';
+    };
+
+    ws.onerror = function(error) {
+        console.error('WebSocket error: ' + error);
+    };
+
+    function sendMessage() {
+        var input = document.getElementById('messageInput');
+        if (input.value.trim() !== '') {
+            ws.send(input.value);
+            input.value = '';
+        }
+    }
+</script>
 </body>
 </html>
