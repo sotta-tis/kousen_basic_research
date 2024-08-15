@@ -22,8 +22,4 @@ public:
     WS_PATH_ADD("/admi", Get);
     WS_PATH_LIST_END
 
-    void broadcastMessage(const std::string &message);
-private:
-    std::set<drogon::WebSocketConnectionPtr> clients_;
-    std::mutex clientsMutex_;
 };

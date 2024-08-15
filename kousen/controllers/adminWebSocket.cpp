@@ -1,6 +1,8 @@
 #include "adminWebSocket.h"
 #include <drogon/drogon.h>
 
+#include "commonData.h"
+
 void adminWebSocket::handleNewMessage(const WebSocketConnectionPtr& connPtr,
                                        std::string&& message,
                                        const WebSocketMessageType& type)
@@ -15,8 +17,8 @@ void adminWebSocket::handleNewConnection(const HttpRequestPtr& req,
                                           const WebSocketConnectionPtr& connPtr)
 {
     {
-        std::lock_guard<std::mutex> guard(clientsMutex_);
-        clients_.insert(connPtr);
+        std::lock_guard<std::mutex> guard(commonData::clientsMutex);
+        commonData::clients.insert(connPtr);
     }
     LOG_INFO << "New WebSocket connection";
 }
@@ -24,20 +26,8 @@ void adminWebSocket::handleNewConnection(const HttpRequestPtr& req,
 void adminWebSocket::handleConnectionClosed(const WebSocketConnectionPtr& connPtr)
 {
     {
-        std::lock_guard<std::mutex> guard(clientsMutex_);
-        clients_.erase(connPtr);
+        std::lock_guard<std::mutex> guard(commonData::clientsMutex);
+        commonData::clients.erase(connPtr);
     }
     LOG_INFO << "WebSocket connection closed";
-}
-
-void adminWebSocket::broadcastMessage(const std::string &message)
-{
-    std::lock_guard<std::mutex> guard(clientsMutex_);
-    for (const auto &client : clients_)
-    {
-        if (client->connected())
-        {
-            client->send(message);
-        }
-    }
 }
