@@ -6,6 +6,8 @@
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include "commonData.h"
+
 #include "json.hpp"
 
 using json = nlohmann::json;
@@ -18,6 +20,7 @@ void sockC::send_command(const std::string& command, const std::string& host , i
     // ソケットの作成
     if((sock = socket(AF_INET, SOCK_STREAM, 0)) < 0){
         std::cerr << "Cant Create Socket" << std::endl;
+        commonData::sentMessageToWebsockets(std::string("Cant Create Socket"));
         return;
     }
 
@@ -25,19 +28,23 @@ void sockC::send_command(const std::string& command, const std::string& host , i
     servAddr.sin_port = htons(port);
     if(inet_pton(AF_INET,host.c_str(), &servAddr.sin_addr) <= 0){
         std::cerr << "Invalid address / Address not supported" << std::endl;
+        commonData::sentMessageToWebsockets(std::string("Invalid address / Address not supported"));
         return;
     }
 
     if(connect(sock, (struct sockaddr*)&servAddr, sizeof(servAddr)) < 0){
         std::cerr << "Connection Failed" << std::endl;
+        commonData::sentMessageToWebsockets(std::string("Connection Failed" ));
         return;
     }
 
     send(sock, command.c_str(), command.length(), 0);
     std::cout << "Command sent: " << command << std::endl;
+    commonData::sentMessageToWebsockets(std::string("Command sent: "));
 
     int vafread = read(sock,buffer,1024);
     std::cout << "Response: " << std::string(buffer, vafread) << std::endl;
+    commonData::sentMessageToWebsockets(std::string(buffer, vafread));
 
     close(sock);
 
