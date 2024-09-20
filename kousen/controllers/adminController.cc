@@ -63,6 +63,7 @@ void adminController::shutDown(const drogon::HttpRequestPtr &req,
 
 void adminController::setHostDetail(const drogon::HttpRequestPtr &req,
                                     std::function<void(const HttpResponsePtr &)> &&callback) {
+    commonData::servoS.start();
     // "/admin"にリダイレクト
     auto resp = HttpResponse::newHttpResponse();
     resp->setStatusCode(drogon::k302Found);
@@ -84,6 +85,7 @@ void adminController::setHostDetail(const drogon::HttpRequestPtr &req,
 
 void adminController::doDobot(const drogon::HttpRequestPtr &req,
                               std::function<void(const HttpResponsePtr &)> &&callback) {
+    commonData::servoS.controlServoCommand("open");
     // "/admin"にリダイレクト
     auto resp = HttpResponse::newHttpResponse();
     resp->setStatusCode(drogon::k302Found);
