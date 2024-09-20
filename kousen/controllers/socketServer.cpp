@@ -1,5 +1,4 @@
 #include "socketServer.h"
-#include "servoControl.h"
 #include <iostream>
 #include <cstring>
 #include <sys/socket.h>
@@ -45,29 +44,21 @@ void SocketServer::start() {
         int valread = read(clientSock, buffer, 1024);
         std::string command(buffer, valread);
 
-        // クライアントリクエストを処理
-        processClientRequest(clientSock);
+        // クライアントにコマンドを送信
+        controlServoCommand(command);
 
         close(clientSock);
         std::cout << "Client disconnected" << std::endl;
     }
 }
 
-void SocketServer::processClientRequest(int clientSock) {
-    char buffer[1024] = {0};
-    int valread = read(clientSock, buffer, 1024);
-    std::string command(buffer, valread);
-
-    controlServoCommand(command);
-}
-
 void SocketServer::controlServoCommand(const std::string& command) {
-    ServoControl servo(18);  // GPIO18にサーボを接続
-
     if (command == "open") {
-        servo.open();
+        std::cout << "Sending open command" << std::endl;
+        // ESP32に"open"コマンドを送信
     } else if (command == "close") {
-        servo.close();
+        std::cout << "Sending close command" << std::endl;
+        // ESP32に"close"コマンドを送信
     } else {
         std::cerr << "Unknown command: " << command << std::endl;
     }
