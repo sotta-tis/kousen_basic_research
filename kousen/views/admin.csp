@@ -54,6 +54,47 @@
                 </div>
             </div>
             <div class="form-row">
+                <div class="form-column">
+                        <h2>Glipper Settings</h2>
+                        <form id="connectionForm" action="/admin/glipper/set">
+                            <label for="ipAddress">IP Address: </label>
+                            <input type="text" id="ipAddress" name="ipAddress" value={% @@.get<std::string>("SERVO_HOST") %} required>
+                            <label for="port">Port: </label>
+                            <input type="number" id="port" name="port" value={% @@.get<int>("SERVO_PORT") %} required>
+                            <button type="submit">Submit</button>
+                        </form>
+                </div>
+                <div class="form-column">
+                    <h2>Glipper setup</h2>
+                        <form id="manualForm" action="admin/glipper/initial">
+                            <div>
+                            待機:
+                            <input type="number" id="standby" name="standby" value={% @@.get<int>("STANDBY") %} size= "3" required>
+                            </div>
+                            <div>
+                            掴む:
+                            <input type="number" id="close" name="close" value={% @@.get<int>("CLOSE") %} size= "3" required>
+                            </div>
+                            <div>
+                            離す:
+                            <input type="number" id="open" name="open" value={% @@.get<int>("OPEN") %} size= "3" required>
+                            </div>
+                            <button type="submit">Send Command</button>
+                        </form>
+                </div>
+                <div class="form-column">
+                <form id="manualForm" action="admin/glipper/do/standby">
+                <button type="submit">待機</button>
+                </form>
+                <form id="manualForm" action="admin/glipper/do/close">
+                <button type="submit">掴む</button>
+                </form>
+                <form id="manualForm" action="admin/glipper/do/open">
+                <button type="submit">離す</button>
+                </form>
+                </div>
+            </div>
+            <div class="form-row">
             <div class="form-column">
                 <h2>System Settings</h2>
                 <form id="systemSettingsForm" action="/system/settings">
