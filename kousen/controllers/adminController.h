@@ -29,12 +29,12 @@ public:
     // use METHOD_ADD to add your custom processing function here;
     // METHOD_ADD(adminController::get, "/{2}/{1}", Get); // path is /adminController/{arg2}/{arg1}
     // METHOD_ADD(adminController::your_method_name, "/{1}/{2}/list", Get); // path is /adminController/{arg1}/{arg2}/list
-    ADD_METHOD_TO(adminController::setHostDetail, "/admin/dobot/set", Get);
-    ADD_METHOD_TO(adminController::doDobot, "/admin/dobot/do", Get);
-    ADD_METHOD_TO(adminController::setGlipperHost, "/admin/glipper/set", Get);
-    ADD_METHOD_TO(adminController::setGlipperInitial, "/admin/glipper/initial", Get);
-    ADD_METHOD_TO(adminController::setGlipperDo, "/admin/glipper/do/{action}", Get);
-    ADD_METHOD_TO(adminController::shutDown, "/admin/kill", Get);
+    ADD_METHOD_TO(adminController::setHostDetail, "/admin/dobot/set", Get,Options, "drogon::EnableCORS");
+    ADD_METHOD_TO(adminController::doDobot, "/admin/dobot/do", Get,Options, "drogon::EnableCORS");
+    ADD_METHOD_TO(adminController::setGlipperHost, "/admin/glipper/set", Get,Options, "drogon::EnableCORS");
+    ADD_METHOD_TO(adminController::setGlipperInitial, "/admin/glipper/initial", Get,Options, "drogon::EnableCORS");
+    ADD_METHOD_TO(adminController::setGlipperDo, "/admin/glipper/do/{action}", Get,Options, "drogon::EnableCORS");
+    ADD_METHOD_TO(adminController::shutDown, "/admin/kill", Get,Options, "drogon::EnableCORS");
     METHOD_LIST_END
 
     // システムシャットダウン
