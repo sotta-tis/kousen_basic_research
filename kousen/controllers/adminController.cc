@@ -3,6 +3,7 @@
 #include "killProcess.h"
 #include "loginUtility.h"
 #include "commonData.h"
+#include "servoClient.h"
 
 // Add definition of your processing function here
 // admin画面
@@ -40,6 +41,12 @@ drogon::HttpResponsePtr adminController::adminIndex()const {
     viewData.insert("y",adminController::D_M_y);
     viewData.insert("z",adminController::D_M_z);
     viewData.insert("r",adminController::D_M_r);
+
+    viewData.insert("SERVO_HOST",adminController::SERVO_HOST);
+    viewData.insert("SERVO_PORT",adminController::SERVO_PORT);
+    viewData.insert("STANDBY",adminController::standby);
+    viewData.insert("CLOSE",adminController::close);
+    viewData.insert("OPEN",adminController::open);
 
     // コールバックレスポンス作成
     return HttpResponse::newHttpViewResponse("admin.csp",viewData);
@@ -215,3 +222,62 @@ void adminController::login(const HttpRequestPtr &req,
 
     callback(response);
 }
+
+void adminController::setGlipperHost(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback){
+    // "/admin"にリダイレクト
+    auto resp = HttpResponse::newHttpResponse();
+    resp->setStatusCode(drogon::k302Found);
+    resp -> addHeader("Location", "/admin");
+
+    auto response = adminController::loginFilter(req,resp);
+
+    if(response == resp){
+        adminController::SERVO_HOST = req->getParameter("ipAddress");
+        adminController::SERVO_PORT = std::stoi(req->getParameter("port"));
+
+        servoClient = std::make_unique<ServoClient>(req->getParameter("ipAddress"),std::stoi(req->getParameter("port")));
+
+        if(servoClient->connectToServer()){
+            std::cout<<"servo connection!!"<<std::endl;
+        }
+    }
+
+    callback(response);
+};
+
+void adminController::setGlipperInitial(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback){
+    // "/admin"にリダイレクト
+    auto resp = HttpResponse::newHttpResponse();
+    resp->setStatusCode(drogon::k302Found);
+    resp -> addHeader("Location", "/admin");
+
+    auto response = adminController::loginFilter(req,resp);
+
+    if(response == resp){
+        adminController::standby = std::stoi(req->getParameter("standby"));
+        adminController::close = std::stoi(req->getParameter("close"));
+        adminController::open = std::stoi(req->getParameter("open"));
+    }
+
+    callback(response);
+};
+void adminController::setGlipperDo(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback,std::string action){
+    // "/admin"にリダイレクト
+    auto resp = HttpResponse::newHttpResponse();
+    resp->setStatusCode(drogon::k302Found);
+    resp -> addHeader("Location", "/admin");
+
+    auto response = adminController::loginFilter(req,resp);
+
+    if(response == resp){
+        if(action=="standby"){
+            servoClient->sendAngle(adminController::standby);
+        }if(action=="close"){
+            servoClient->sendAngle(adminController::close);
+        }if(action=="open"){
+            servoClient->sendAngle(adminController::open);
+        }
+    }
+
+    callback(response);
+};

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <drogon/HttpController.h>
+#include "servoClient.h"
 
 using namespace drogon;
 
@@ -14,6 +15,15 @@ private:
     int D_M_z =0;
     int D_M_r =0;
 
+    std::string SERVO_HOST="---";
+    int SERVO_PORT=-1;
+
+    int standby = 0;
+    int close = 0;
+    int open = 0;
+
+    std::unique_ptr<ServoClient> servoClient;
+
 public:
     METHOD_LIST_BEGIN
     // use METHOD_ADD to add your custom processing function here;
@@ -23,6 +33,9 @@ public:
     ADD_METHOD_TO(adminController::admin, "/admin", Get); // path is /absolute/path/{arg1}/{arg2}/list
     ADD_METHOD_TO(adminController::setHostDetail, "/admin/dobot/set", Get);
     ADD_METHOD_TO(adminController::doDobot, "/admin/dobot/do", Get);
+    ADD_METHOD_TO(adminController::setGlipperHost, "/admin/glipper/set", Get);
+    ADD_METHOD_TO(adminController::setGlipperInitial, "/admin/glipper/initial", Get);
+    ADD_METHOD_TO(adminController::setGlipperDo, "/admin/glipper/do/{action}", Get);
     ADD_METHOD_TO(adminController::shutDown, "/admin/kill", Get);
     ADD_METHOD_TO(adminController::newuser, "/newuser", Get);
     ADD_METHOD_TO(adminController::submit, "/submit", Post);
@@ -40,6 +53,10 @@ public:
     // dobot do
     void doDobot(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
 
+
+    void setGlipperHost(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
+    void setGlipperInitial(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
+    void setGlipperDo(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback,std::string action);
 
     void newuser(const HttpRequestPtr &req, std::function<void (const HttpResponsePtr &)> &&callback) const;
 
