@@ -147,19 +147,3 @@ void adminController::getAdminProps(const drogon::HttpRequestPtr &req,
     resp->setStatusCode(statusCode);
     callback(resp);
 }
-
-/*
- * std::string DOBOT_HOST="";
-    int DOBOT_PORT=-1;
-    int D_M_x =0;
-    int D_M_y =0;
-    int D_M_z =0;
-    int D_M_r =0;
-
-    std::string SERVO_HOST="";
-    int SERVO_PORT=-1;
-
-    int standby = 0;
-    int close = 0;
-    int open = 0;
- */
