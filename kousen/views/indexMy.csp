@@ -1,4 +1,0 @@
-<%layout layout.csp %>
-
-    <h1>いらっしゃいませ</h1>
-    <a href="/menu" class="menu-button">メニューを見る</a>
