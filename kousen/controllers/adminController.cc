@@ -124,3 +124,42 @@ void adminController::setGlipperDo(const HttpRequestPtr& req, std::function<void
     resp->setStatusCode(statusCode);
     callback(resp);
 };
+
+void adminController::getAdminProps(const drogon::HttpRequestPtr &req,
+                                    std::function<void(const HttpResponsePtr &)> &&callback) {
+    drogon::HttpStatusCode statusCode=drogon::k200OK;
+    Json::Value jsonResponse;
+
+    jsonResponse["dobot"]["host"]=adminController::DOBOT_HOST;
+    jsonResponse["dobot"]["port"]=adminController::DOBOT_PORT;
+    jsonResponse["dobot"]["x"] = adminController::D_M_x;
+    jsonResponse["dobot"]["y"] = adminController::D_M_y;
+    jsonResponse["dobot"]["z"] = adminController::D_M_z;
+    jsonResponse["dobot"]["r"] = adminController::D_M_r;
+
+    jsonResponse["glip"]["host"] = adminController::SERVO_HOST;
+    jsonResponse["glip"]["port"] = adminController::SERVO_PORT;
+    jsonResponse["glip"]["standby"] = adminController::standby;
+    jsonResponse["glip"]["close"] = adminController::close;
+    jsonResponse["glip"]["open"] = adminController::open;
+
+    auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
+    resp->setStatusCode(statusCode);
+    callback(resp);
+}
+
+/*
+ * std::string DOBOT_HOST="";
+    int DOBOT_PORT=-1;
+    int D_M_x =0;
+    int D_M_y =0;
+    int D_M_z =0;
+    int D_M_r =0;
+
+    std::string SERVO_HOST="";
+    int SERVO_PORT=-1;
+
+    int standby = 0;
+    int close = 0;
+    int open = 0;
+ */
