@@ -1,4 +1,11 @@
 {
+    "filters": {
+        "drogon::EnableCORS": {
+            "allowOrigins": "*",
+            "allowMethods": "GET,POST,PUT,DELETE,OPTIONS",
+            "allowHeaders": "Content-Type,Authorization"
+        }
+    },
     "app": {
         //number_of_threads: IOスレッドの数。デフォルトは1です。値を0に設定すると、スレッド数はCPUコア数になります。
         "number_of_threads": 1,

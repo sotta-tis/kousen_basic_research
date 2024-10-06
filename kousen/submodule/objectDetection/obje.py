@@ -19,10 +19,10 @@ def load_label_map(label_map_path):
     return category_index
 
 # ラベルマップをロード
-label_map = load_label_map('/Users/toshizumi/Downloads/mobilenet/label_map.pbtxt')
+label_map = load_label_map('/Users/toshizumi/CLionProjects/kousen_basic_research/kousen/submodule/objectDetection/label_map.pbtxt')
 
 # saved_modelのロード
-model = tf.saved_model.load("/Users/toshizumi/Downloads/my_model/saved_model")
+model = tf.saved_model.load("/Users/toshizumi/CLionProjects/kousen_basic_research/kousen/submodule/objectDetection/mobilenet/saved_model")
 
 # 推論関数を取得
 infer = model.signatures['serving_default']
