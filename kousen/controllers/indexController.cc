@@ -5,7 +5,7 @@ void indexController::index(const HttpRequestPtr& req, std::function<void (const
     Json::Value jsonResponse;
 
     try {
-        std::cout<<"sample"<<std::endl;
+        jsonResponse["aa"]="aaa";
     }catch(const std::exception& e){
         statusCode=drogon::k500InternalServerError;
     }
