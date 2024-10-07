@@ -2,8 +2,10 @@
 #include <chrono>
 
 #include"controllers/killProcess.h"
+#include "controllers/commonData.h"
 
 int main() {
+    commonData::startTaskRunner();
     std::cout<<killPro::pid<<std::endl;
     //Set HTTP listener address and port
     drogon::app().addListener("0.0.0.0", 80);
