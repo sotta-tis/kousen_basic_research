@@ -1,6 +1,11 @@
 #include "commonData.h"
 
 namespace commonData{
+    // グローバル変数の定義
+    std::queue<std::function<void()>> taskQueue;
+    std::mutex queueMutex;
+    std::condition_variable queueCondVar;
+    bool stopTaskRunner = false;
     std::set<drogon::WebSocketConnectionPtr> clients;
     std::mutex clientsMutex;
 
@@ -16,13 +21,7 @@ namespace commonData{
         }
     }
 
-// グローバル変数の定義
-    std::queue<std::function<void()>> taskQueue;
-    std::mutex queueMutex;
-    std::condition_variable queueCondVar;
-    bool stopTaskRunner = false;
-
-// タスクを追加する関数の実装
+    // タスクを追加する関数の実装
     void addTask(std::function<void()> task) {
         {
             std::lock_guard<std::mutex> lock(queueMutex);
@@ -31,12 +30,12 @@ namespace commonData{
         queueCondVar.notify_one();  // タスクが追加されたことを通知
     }
 
-// タスクを処理する関数（スレッドを開始する）
+    // タスクを処理する関数（スレッドを開始する）
     void startTaskRunner() {
         std::thread(taskRunner).detach();  // 別スレッドで実行
     }
 
-// タスク処理ループ（while文）
+    // タスク処理ループ（while文）
     void taskRunner() {
         while (true) {
             std::function<void()> task;
@@ -60,5 +59,34 @@ namespace commonData{
                 task();
             }
         }
+    }
+
+    cv::Mat getImageFromCameraOrPath(const std::string& fallbackImagePath) {
+        cv::Mat frame;
+
+        // カメラデバイスのオープン（デフォルトのカメラはID 0）
+        cv::VideoCapture cap(0);
+        if (cap.isOpened()) {
+            // カメラを開いた後に1秒待機
+            std::this_thread::sleep_for(std::chrono::seconds(2));
+
+            // フレームをキャプチャ
+            cap >> frame;
+            if (!frame.empty()) {
+                std::cout << "カメラから画像を取得しました。" << std::endl;
+                return frame;
+            }
+        }
+        std::cerr << "カメラが開けないか、フレームを取得できませんでした。" << std::endl;
+
+        // 指定したパスから画像を読み込む
+        frame = cv::imread(fallbackImagePath, cv::IMREAD_COLOR);
+        if (frame.empty()) {
+            std::cerr << "指定されたパスから画像を読み込めませんでした: " << fallbackImagePath << std::endl;
+        } else {
+            std::cout << "指定されたパスから画像を取得しました。" << std::endl;
+        }
+
+        return frame;
     }
 }

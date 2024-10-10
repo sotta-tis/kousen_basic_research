@@ -30,6 +30,7 @@ public:
     // METHOD_ADD(adminController::get, "/{2}/{1}", Get); // path is /adminController/{arg2}/{arg1}
     // METHOD_ADD(adminController::your_method_name, "/{1}/{2}/list", Get); // path is /adminController/{arg1}/{arg2}/lis
         ADD_METHOD_TO(adminController::getAdminProps,"/admin",Get);
+        ADD_METHOD_TO(adminController::getImage,"/admin/image",Get);
         ADD_METHOD_TO(adminController::setHostDetail, "/admin/dobot/set", Get);
         ADD_METHOD_TO(adminController::doDobot, "/admin/dobot/do", Get);
         ADD_METHOD_TO(adminController::setGlipperHost, "/admin/glipper/set", Get);
@@ -52,4 +53,5 @@ public:
     void setGlipperDo(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback,std::string action);
 
     void getAdminProps(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
+    void getImage(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
 };

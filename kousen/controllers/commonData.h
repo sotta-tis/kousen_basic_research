@@ -8,6 +8,9 @@
 #include <condition_variable>
 #include <functional>
 #include <thread>
+#include <opencv2/opencv.hpp>
+#include <string>
+
 
 namespace commonData{
     extern std::set<drogon::WebSocketConnectionPtr> clients;  // clientsセットを外部からアクセス可能に
@@ -20,6 +23,11 @@ namespace commonData{
     extern std::mutex queueMutex;
     extern std::condition_variable queueCondVar;
     extern bool stopTaskRunner;
+
+
+
+// カメラから画像を取得し、失敗した場合は指定されたパスから画像を取得する関数
+    cv::Mat getImageFromCameraOrPath(const std::string& fallbackImagePath);
 
 // タスクを追加する関数
     void addTask(std::function<void()> task);
