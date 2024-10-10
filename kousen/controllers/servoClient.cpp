@@ -1,5 +1,5 @@
 // ServoClient.cpp
-#include "ServoClient.h"
+#include "servoClient.h"
 #include <iostream>
 
 ServoClient::ServoClient(const std::string &ip, int port) {
