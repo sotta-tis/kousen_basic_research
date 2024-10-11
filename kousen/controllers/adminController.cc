@@ -1,3 +1,5 @@
+#include <iostream>
+#include <string>
 #include "adminController.h"
 #include "socketCommunication.h"
 #include "killProcess.h"
@@ -149,14 +151,15 @@ void adminController::getAdminProps(const drogon::HttpRequestPtr &req,
     callback(resp);
 }
 
+
 void adminController::getImage(const drogon::HttpRequestPtr &req,
                                     std::function<void(const HttpResponsePtr &)> &&callback){
-    // ダミー画像を作成（例: 100x100の赤色の画像）
-    cv::Mat image=commonData::getImageFromCameraOrPath("aa");
+    double scale = std::stod(req->getParameter("scale"));
+    cv::Mat image= commonData::cropImage(commonData::getImageFromCameraOrPath("aa"),320,320,scale);
 
     // 画像をJPEG形式でエンコード
     std::vector<uchar> buffer;
-    if (!cv::imencode(".jpg", image, buffer)) {
+    if (!cv::imencode(".jpg",image, buffer)) {
         // エンコード失敗時のエラーレスポンス
         auto resp = HttpResponse::newHttpResponse();
         resp->setStatusCode(k500InternalServerError);
@@ -169,6 +172,11 @@ void adminController::getImage(const drogon::HttpRequestPtr &req,
     auto resp = HttpResponse::newHttpResponse();
     resp->setStatusCode(k200OK);
     resp->setContentTypeCode(CT_IMAGE_JPG);
-    resp->setBody(std::string(buffer.begin(), buffer.end()));
+    resp->setBody(std::string(reinterpret_cast<const char*>(buffer.data()), buffer.size()));
+    // キャッシュ制御の設定（オプション）
+    resp->addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
+    resp->addHeader("Pragma", "no-cache");
+    resp->addHeader("Expires", "0");
     callback(resp);
 }
+

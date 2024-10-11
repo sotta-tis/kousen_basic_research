@@ -61,6 +61,32 @@ namespace commonData{
         }
     }
 
+    cv::Mat cropImage(const cv::Mat& inputImage, int cropWidth, int cropHeight, double scale) {
+        // 横縦比を保ったままリサイズする
+        cv::Mat resizedImage;
+        cv::resize(inputImage, resizedImage, cv::Size(), scale, scale);
+
+        // リサイズ後の画像サイズを取得
+        int width = resizedImage.cols;
+        int height = resizedImage.rows;
+
+        // トリミングする領域の左上の座標を計算
+        int x = (width - cropWidth) / 2;
+        int y = (height - cropHeight) / 2;
+
+        // 領域を画像サイズに収めるためのチェック
+        x = std::max(0, x);
+        y = std::max(0, y);
+        int cropWidthAdjusted = std::min(cropWidth, width - x);
+        int cropHeightAdjusted = std::min(cropHeight, height - y);
+
+        // トリミングする領域を設定
+        cv::Rect roi(x, y, cropWidthAdjusted, cropHeightAdjusted);
+
+        // トリミング
+        return resizedImage(roi);
+    }
+
     cv::Mat getImageFromCameraOrPath(const std::string& fallbackImagePath) {
         cv::Mat frame;
 

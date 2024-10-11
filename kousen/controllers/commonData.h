@@ -24,17 +24,18 @@ namespace commonData{
     extern std::condition_variable queueCondVar;
     extern bool stopTaskRunner;
 
+    cv::Mat cropImage(const cv::Mat& inputImage, int cropWidth, int cropHeight, double scale);
 
 
-// カメラから画像を取得し、失敗した場合は指定されたパスから画像を取得する関数
+    // カメラから画像を取得し、失敗した場合は指定されたパスから画像を取得する関数
     cv::Mat getImageFromCameraOrPath(const std::string& fallbackImagePath);
 
-// タスクを追加する関数
+    // タスクを追加する関数
     void addTask(std::function<void()> task);
 
-// タスクを処理する関数（別スレッドで実行）
+    // タスクを処理する関数（別スレッドで実行）
     void startTaskRunner();
 
-// タスク処理ループ
+    // タスク処理ループ
     void taskRunner();
 }
