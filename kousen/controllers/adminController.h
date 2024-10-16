@@ -22,6 +22,12 @@ private:
     int close = 0;
     int open = 0;
 
+    double  scale = 1;
+    double img_initial_x = 0;
+    double img_initial_y = 0;
+    double img_box_width = 0;
+    double img_box_height = 0;
+
     std::unique_ptr<ServoClient> servoClient;
 
 public:
@@ -33,6 +39,7 @@ public:
         ADD_METHOD_TO(adminController::getImage,"/admin/image",Get);
         ADD_METHOD_TO(adminController::setHostDetail, "/admin/dobot/set", Get);
         ADD_METHOD_TO(adminController::doDobot, "/admin/dobot/do", Get);
+        ADD_METHOD_TO(adminController::setImageLocation, "/admin/dobot/set/img/location", Get);
         ADD_METHOD_TO(adminController::setGlipperHost, "/admin/glipper/set", Get);
         ADD_METHOD_TO(adminController::setGlipperInitial, "/admin/glipper/initial", Get);
         ADD_METHOD_TO(adminController::setGlipperDo, "/admin/glipper/do/{action}", Get);
@@ -54,4 +61,5 @@ public:
 
     void getAdminProps(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
     void getImage(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
+    void setImageLocation(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
 };

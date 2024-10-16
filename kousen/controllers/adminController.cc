@@ -140,6 +140,11 @@ void adminController::getAdminProps(const drogon::HttpRequestPtr &req,
     jsonResponse["dobot"]["z"] = adminController::D_M_z;
     jsonResponse["dobot"]["r"] = adminController::D_M_r;
 
+    jsonResponse["dobot"]["initial"]["location"]["img"]["x"]=adminController::img_initial_x;
+    jsonResponse["dobot"]["initial"]["location"]["img"]["y"]=adminController::img_initial_y;
+    jsonResponse["dobot"]["initial"]["location"]["img"]["width"]=adminController::img_box_width;
+    jsonResponse["dobot"]["initial"]["location"]["img"]["height"]=adminController::img_box_height;
+
     jsonResponse["glip"]["host"] = adminController::SERVO_HOST;
     jsonResponse["glip"]["port"] = adminController::SERVO_PORT;
     jsonResponse["glip"]["standby"] = adminController::standby;
@@ -154,8 +159,8 @@ void adminController::getAdminProps(const drogon::HttpRequestPtr &req,
 
 void adminController::getImage(const drogon::HttpRequestPtr &req,
                                     std::function<void(const HttpResponsePtr &)> &&callback){
-    double scale = std::stod(req->getParameter("scale"));
-    cv::Mat image= commonData::cropImage(commonData::getImageFromCameraOrPath("aa"),320,320,scale);
+    adminController::scale = std::stod(req->getParameter("scale"));
+    cv::Mat image= commonData::cropImage(commonData::getImageFromCameraOrPath("aa"),320,320,adminController::scale);
 
     // 画像をJPEG形式でエンコード
     std::vector<uchar> buffer;
@@ -177,6 +182,28 @@ void adminController::getImage(const drogon::HttpRequestPtr &req,
     resp->addHeader("Cache-Control", "no-cache, no-store, must-revalidate");
     resp->addHeader("Pragma", "no-cache");
     resp->addHeader("Expires", "0");
+    callback(resp);
+}
+
+void adminController::setImageLocation(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback){
+    drogon::HttpStatusCode statusCode=drogon::k200OK;
+    Json::Value jsonResponse;
+
+    try{
+        std::cout<<"a"<<std::endl;
+        cv::Mat image= commonData::cropImage(commonData::getImageFromCameraOrPath("aa"),320,320,adminController::scale);
+        commonData::sendImageToServer(image,"http://127.0.0.1:8881");
+        adminController::img_initial_x = std::stod(req->getParameter("x"));
+        adminController::img_initial_y = std::stod(req->getParameter("y"));
+        adminController::img_box_width = std::stod(req->getParameter("width"));
+        adminController::img_box_height = std::stod(req->getParameter("height"));
+        std::cout<<"aa"<<std::endl;
+    }catch(const std::exception& e){
+        statusCode=drogon::k501NotImplemented;
+    }
+
+    auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
+    resp->setStatusCode(statusCode);
     callback(resp);
 }
 

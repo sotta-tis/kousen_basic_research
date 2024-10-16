@@ -38,4 +38,7 @@ namespace commonData{
 
     // タスク処理ループ
     void taskRunner();
+
+    void sendImageToServer(const cv::Mat& image, const std::string& server_url);
+    void drawBoundingBoxes(cv::Mat& image, const std::string& jsonResponse);
 }

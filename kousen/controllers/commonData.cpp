@@ -1,4 +1,12 @@
 #include "commonData.h"
+#include <drogon/HttpClient.h>
+#include <drogon/drogon.h>
+#include <opencv2/opencv.hpp>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <vector>
+#include <json/json.h>
 
 namespace commonData{
     // グローバル変数の定義
@@ -114,5 +122,70 @@ namespace commonData{
         }
 
         return frame;
+    }
+
+    // サーバーに画像を送信して結果を受け取る関数
+    void sendImageToServer(const cv::Mat& image, const std::string& server_url) {
+        // 画像を一時的にファイルとして保存
+        std::string temp_image_path = "./temp_image.jpg";
+        cv::imwrite(temp_image_path, image);
+
+        // DrogonでHTTPリクエストを作成
+        auto client = drogon::HttpClient::newHttpClient(server_url);
+
+        // アップロードするファイルのリストを作成
+        std::vector<drogon::UploadFile> files;
+        drogon::UploadFile file(temp_image_path,temp_image_path,"file",drogon::ContentType::CT_IMAGE_JPG);
+        files.push_back(file);
+
+        // マルチパートフォームデータを作成
+        auto req = drogon::HttpRequest::newFileUploadRequest(std::move(files));
+        req->setPath("/upload");
+        req->setMethod(drogon::Post);
+
+        // リクエストを非同期に送信し、結果を処理
+        client->sendRequest(req, [temp_image_path](drogon::ReqResult result, const drogon::HttpResponsePtr& response) {
+            if (result == drogon::ReqResult::Ok && response) {
+                std::cout << "Response from server: " << response->body() << std::endl;
+            } else {
+                std::cerr << "Failed to get response from server!" << std::endl;
+            }
+        });
+    }
+
+
+    // JSONレスポンスを解析してバウンディングボックスを描画する関数
+    void drawBoundingBoxes(cv::Mat& image, const std::string& jsonResponse) {
+        Json::Value root;
+        Json::CharReaderBuilder builder;
+        std::string errs;
+
+        // JSONパース
+        std::istringstream s(jsonResponse);
+        if (!Json::parseFromStream(builder, s, &root, &errs)) {
+            std::cerr << "Failed to parse JSON: " << errs << std::endl;
+            return;
+        }
+
+        // 推論結果のバウンディングボックスを描画
+        for (const auto& result : root) {
+            auto box = result["box"];
+            std::cout<<box[0].asFloat() * image.rows;
+            float y_min = box[0].asFloat() * image.rows;
+            float x_min = box[1].asFloat() * image.cols;
+            float y_max = box[2].asFloat() * image.rows;
+            float x_max = box[3].asFloat() * image.cols;
+
+            // バウンディングボックスを描画
+            cv::rectangle(image, cv::Point(x_min, y_min), cv::Point(x_max, y_max), cv::Scalar(0, 255, 0), 2);
+
+            // クラス名とスコアを描画
+            std::string label = result["class_name"].asString() + " " + std::to_string(result["score"].asFloat());
+            int baseLine;
+            cv::Size labelSize = cv::getTextSize(label, cv::FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseLine);
+            cv::rectangle(image, cv::Point(x_min, y_min - labelSize.height), cv::Point(x_min + labelSize.width, y_min + baseLine),
+                          cv::Scalar(255, 255, 255), cv::FILLED);
+            cv::putText(image, label, cv::Point(x_min, y_min), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 0), 1);
+        }
     }
 }
