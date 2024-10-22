@@ -11,7 +11,7 @@ UPLOAD_FOLDER = './'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # TensorFlowモデルの読み込み
-MODEL_PATH = '/back/submodule/objectDetection/mobilenetfpnlite/saved_model'  # saved_modelのパス
+MODEL_PATH = 'mobilenet/saved_model'  # saved_modelのパス
 model = tf.saved_model.load(MODEL_PATH)
 
 def perform_inference(image):
