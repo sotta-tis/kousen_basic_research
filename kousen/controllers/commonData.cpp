@@ -6,7 +6,12 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <vector>
+#include <string>
+#include "json.hpp"
+#include <map>
 #include <json/json.h>
+
+using json = nlohmann::json;
 
 namespace commonData{
     // グローバル変数の定義
@@ -16,6 +21,10 @@ namespace commonData{
     bool stopTaskRunner = false;
     std::set<drogon::WebSocketConnectionPtr> clients;
     std::mutex clientsMutex;
+
+    std::map<int,int> sushiLabel;
+    std::vector<std::vector<float>> sushiBoxes;
+    int sushiCount;
 
     void sentMessageToWebsockets(const std::string &message)
     {
@@ -124,8 +133,8 @@ namespace commonData{
         return frame;
     }
 
-    // サーバーに画像を送信して結果を受け取る関数
-    void sendImageToServer(const cv::Mat& image, const std::string& server_url) {
+    // 画像からオブジェクト検出する
+    void objectDetection(const cv::Mat& image, const std::string& server_url) {
         // 画像を一時的にファイルとして保存
         std::string temp_image_path = "./temp_image.jpg";
         cv::imwrite(temp_image_path, image);
@@ -144,48 +153,51 @@ namespace commonData{
         req->setMethod(drogon::Post);
 
         // リクエストを非同期に送信し、結果を処理
-        client->sendRequest(req, [temp_image_path](drogon::ReqResult result, const drogon::HttpResponsePtr& response) {
-            if (result == drogon::ReqResult::Ok && response) {
-                std::cout << "Response from server: " << response->body() << std::endl;
-            } else {
-                std::cerr << "Failed to get response from server!" << std::endl;
+        client->sendRequest(req, [image,temp_image_path](drogon::ReqResult result, const drogon::HttpResponsePtr& response) {
+            if (result == drogon::ReqResult::Ok && response){
+                auto jsonRes = json::parse(response->body());
+                int countObjects = jsonRes["num_detections"];
+                std::vector<int> classLabels = jsonRes["detection_classes"];
+                std::vector<std::vector<float>> boundingBoxesLocation = jsonRes["detection_boxes"];
+                std::vector<double> scores = jsonRes["detection_scores"];
+
+                std::vector<std::vector<float>> boxes;
+                std::map<int,int> label;
+                for(int i=0;i<scores.size();i++){
+                    if(scores[i]>=0.5) {
+                        label[classLabels[i]]+=1;
+                        boxes.push_back(boundingBoxesLocation[i]);
+                    }
+                }
+
+                commonData::sushiBoxes = boxes;
+                commonData::sushiLabel = label;
+                commonData::sushiCount = boxes.size();
+                commonData::drawBoundingBoxesAndSave(image,boxes,"sample.jpg");
             }
         });
     }
 
 
     // JSONレスポンスを解析してバウンディングボックスを描画する関数
-    void drawBoundingBoxes(cv::Mat& image, const std::string& jsonResponse) {
-        Json::Value root;
-        Json::CharReaderBuilder builder;
-        std::string errs;
+    void drawBoundingBoxesAndSave(const cv::Mat& image, const std::vector<std::vector<float>>& boxes, const std::string& savePath) {
+        // 各バウンディングボックスを描画
+        for (const auto& box : boxes) {
+            // バウンディングボックスの座標 (左上x, 左上y, 右下x, 右下y)
+            int x1 = static_cast<int>(box[1] * image.cols);
+            int y1 = static_cast<int>(box[0] * image.rows);
+            int x2 = static_cast<int>(box[3] * image.cols);
+            int y2 = static_cast<int>(box[2] * image.rows);
 
-        // JSONパース
-        std::istringstream s(jsonResponse);
-        if (!Json::parseFromStream(builder, s, &root, &errs)) {
-            std::cerr << "Failed to parse JSON: " << errs << std::endl;
-            return;
+            std::cout<<box[1]<<','<<box[0]<<','<<box[2]<<','<<box[3]<<','<<std::endl;
+
+            // 矩形（バウンディングボックス）を描画する
+            cv::rectangle(image, cv::Point(x1, y1), cv::Point(x2, y2), cv::Scalar(0, 255, 0), 2);
         }
 
-        // 推論結果のバウンディングボックスを描画
-        for (const auto& result : root) {
-            auto box = result["box"];
-            std::cout<<box[0].asFloat() * image.rows;
-            float y_min = box[0].asFloat() * image.rows;
-            float x_min = box[1].asFloat() * image.cols;
-            float y_max = box[2].asFloat() * image.rows;
-            float x_max = box[3].asFloat() * image.cols;
+        // 画像を保存
+        cv::imwrite(savePath, image);
 
-            // バウンディングボックスを描画
-            cv::rectangle(image, cv::Point(x_min, y_min), cv::Point(x_max, y_max), cv::Scalar(0, 255, 0), 2);
-
-            // クラス名とスコアを描画
-            std::string label = result["class_name"].asString() + " " + std::to_string(result["score"].asFloat());
-            int baseLine;
-            cv::Size labelSize = cv::getTextSize(label, cv::FONT_HERSHEY_SIMPLEX, 0.5, 1, &baseLine);
-            cv::rectangle(image, cv::Point(x_min, y_min - labelSize.height), cv::Point(x_min + labelSize.width, y_min + baseLine),
-                          cv::Scalar(255, 255, 255), cv::FILLED);
-            cv::putText(image, label, cv::Point(x_min, y_min), cv::FONT_HERSHEY_SIMPLEX, 0.5, cv::Scalar(0, 0, 0), 1);
-        }
+        std::cout << "Image saved to: " << savePath << std::endl;
     }
 }

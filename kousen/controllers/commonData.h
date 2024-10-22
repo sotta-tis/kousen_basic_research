@@ -9,6 +9,7 @@
 #include <functional>
 #include <thread>
 #include <opencv2/opencv.hpp>
+#include <map>
 #include <string>
 
 
@@ -23,6 +24,10 @@ namespace commonData{
     extern std::mutex queueMutex;
     extern std::condition_variable queueCondVar;
     extern bool stopTaskRunner;
+
+    extern std::map<int,int> sushiLabel;
+    extern std::vector<std::vector<float>> sushiBoxes;
+    extern int sushiCount;
 
     cv::Mat cropImage(const cv::Mat& inputImage, int cropWidth, int cropHeight, double scale);
 
@@ -39,6 +44,6 @@ namespace commonData{
     // タスク処理ループ
     void taskRunner();
 
-    void sendImageToServer(const cv::Mat& image, const std::string& server_url);
-    void drawBoundingBoxes(cv::Mat& image, const std::string& jsonResponse);
+    void objectDetection(const cv::Mat& image, const std::string& server_url);
+    void drawBoundingBoxesAndSave(const cv::Mat& image, const std::vector<std::vector<float>>& boxes, const std::string& savePath);
 }
