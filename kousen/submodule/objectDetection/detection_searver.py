@@ -7,7 +7,7 @@ import tensorflow as tf
 app = Flask(__name__)
 
 # 画像を保存するディレクトリ
-UPLOAD_FOLDER = 'uploaded_images'
+UPLOAD_FOLDER = './'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # TensorFlowモデルの読み込み

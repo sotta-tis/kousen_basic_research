@@ -151,6 +151,14 @@ void adminController::getAdminProps(const drogon::HttpRequestPtr &req,
     jsonResponse["glip"]["close"] = adminController::close;
     jsonResponse["glip"]["open"] = adminController::open;
 
+    jsonResponse["image"]["scale"] = adminController::scale;
+
+    jsonResponse["sushi"]["count"] = commonData::sushiCount;
+    for (const auto& pair : commonData::sushiLabel){
+        std::cout<<pair.first<<','<<pair.second<<std::endl;
+        jsonResponse["sushi"]["menu"][std::to_string(pair.first)] = pair.second;
+    }
+
     auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
     resp->setStatusCode(statusCode);
     callback(resp);
@@ -190,14 +198,16 @@ void adminController::setImageLocation(const HttpRequestPtr& req, std::function<
     Json::Value jsonResponse;
 
     try{
-        std::cout<<"a"<<std::endl;
-        cv::Mat image= commonData::cropImage(commonData::getImageFromCameraOrPath("aa"),320,320,adminController::scale);
-        commonData::sendImageToServer(image,"http://127.0.0.1:8881");
         adminController::img_initial_x = std::stod(req->getParameter("x"));
         adminController::img_initial_y = std::stod(req->getParameter("y"));
         adminController::img_box_width = std::stod(req->getParameter("width"));
         adminController::img_box_height = std::stod(req->getParameter("height"));
-        std::cout<<"aa"<<std::endl;
+
+        commonData::addTask([this]() {
+            cv::Mat image= commonData::cropImage(commonData::getImageFromCameraOrPath("aa"),320,320,adminController::scale);
+            commonData::objectDetection(image,"http://127.0.0.1:8881");
+        });
+
     }catch(const std::exception& e){
         statusCode=drogon::k501NotImplemented;
     }
