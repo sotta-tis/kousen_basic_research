@@ -5,7 +5,7 @@ services:
     # test用のイメージ
     # 本番用に体裁を整えて作る必要あり
     image: sotta/kousen_basic_research:latest
-    container_name: kousen
+    container_name: back
     logging:
       driver: json-file
     tty: true
@@ -24,13 +24,13 @@ services:
   postgres:
     container_name: db
     hostname: ${POSTGRES_HOSTNAME}
-    build: ./kousen/postgres/
+    build: back/postgres/
     restart: always
     ports:
       - "5433:5432"
     volumes:
       - db:/var/lib/postgresql/data
-      - ./kousen/postgres/init:/docker-entrypoint-initdb.d
+      - ./back/postgres/init:/docker-entrypoint-initdb.d
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
       - POSTGRES_PASSWORD=${POSTGRES_PASS}

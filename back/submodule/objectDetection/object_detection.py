@@ -6,11 +6,11 @@ import matplotlib.pyplot as plt
 from object_detection.utils import label_map_util
 
 # モデルの読み込み (事前に保存したモデルパス)
-model_path = '/Users/toshizumi/CLionProjects/kousen_basic_research/kousen/submodule/objectDetection/mobilenet/saved_model'
+model_path = '/back/submodule/objectDetection/mobilenet/saved_model'
 model = tf.saved_model.load(model_path)
 
 # label_map.pbtxt のパス
-label_map_path = '/Users/toshizumi/CLionProjects/kousen_basic_research/kousen/submodule/objectDetection/label_map.pbtxt'
+label_map_path = '/back/submodule/objectDetection/label_map.pbtxt'
 
 # ラベルマップの読み込み
 category_index = label_map_util.create_category_index_from_labelmap(label_map_path, use_display_name=True)
@@ -19,7 +19,7 @@ category_index = label_map_util.create_category_index_from_labelmap(label_map_pa
 def load_image_into_numpy_array(path):
     return np.array(Image.open(path))
 
-image_path = '/Users/toshizumi/CLionProjects/kousen_basic_research/kousen/submodule/objectDetection/IMG_0046 (2).jpeg'
+image_path = '/back/submodule/objectDetection/IMG_0046 (2).jpeg'
 image_np = load_image_into_numpy_array(image_path)
 
 # 画像のサイズ取得

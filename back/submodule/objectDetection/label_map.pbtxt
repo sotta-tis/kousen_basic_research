@@ -1,0 +1,30 @@
+
+item {
+    id: 1
+    name: "ikura"
+}
+
+item {
+    id: 2
+    name: "maguro"
+}
+
+item {
+    id: 3
+    name: "ika"
+}
+
+item {
+    id: 4
+    name: "uni"
+}
+
+item {
+    id: 5
+    name: "tamago"
+}
+
+item {
+    id: 6
+    name: "ebi"
+}
