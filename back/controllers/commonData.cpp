@@ -22,7 +22,14 @@ namespace commonData{
     std::set<drogon::WebSocketConnectionPtr> clients;
     std::mutex clientsMutex;
 
-    std::map<int,int> sushiLabel;
+    std::map<int,int> sushiLabel={
+            {1, 0},
+            {2,0},
+            {3,0},
+            {4,0},
+            {5,0},
+            {6,0}
+    };
     std::vector<std::vector<float>> sushiBoxes;
     int sushiCount;
 
