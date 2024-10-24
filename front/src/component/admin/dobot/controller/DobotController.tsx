@@ -38,7 +38,7 @@ const DobotController = ({ x, y, z, r }: DobotControllerProps) => {
   ) => {
     const query = `?x=${x}&y=${y}&z=${z}&r=${r}`;
     try {
-      const urlToFetch = `${process.env.NEXT_PUBLIC_BACKEND_API_ENDPOINT}/admin/dobot/do${query}`;
+      const urlToFetch = `${process.env.NEXT_PUBLIC_BACKEND_API_ENDPOINT}/admin/dobot/go${query}`;
       await fetch(`/api/proxy?url=${encodeURIComponent(urlToFetch)}`);
     } catch (error) {
       console.error("Failed to send data", error);
