@@ -13,11 +13,7 @@ import {
   ModalBody,
   ModalCloseButton,
   Button,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
+  useToast,
 } from "@chakra-ui/react";
 
 interface ItemProps {
@@ -34,83 +30,118 @@ interface MenuProps {
 
 const SushiItem: React.FC<ItemProps> = ({ imageSrc, price, name, stock }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [quantity, setQuantity] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
 
-  const handleQuantityChange = (value: string) => setQuantity(Number(value));
+  const order = async () => {
+    setLoading(true);
+    const urlToFetch = `${process.env.NEXT_PUBLIC_BACKEND_API_ENDPOINT}/order`;
+    try {
+      const res = await fetch(
+        `/api/proxy?url=${encodeURIComponent(urlToFetch)}`
+      );
+      if (res.ok) {
+        toast({
+          title: "ご注文ありがとうございます",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      } else {
+        throw new Error("Failed Ordering");
+        onClose;
+      }
+    } catch (error) {
+      console.error("Failed to load image:", error);
+      toast({
+        title: "Error Ordering",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+      onClose;
+    } finally {
+      setLoading(false);
+      onClose;
+    }
+  };
 
   return (
     <>
-      {stock ? (
-        <>
+      <Box
+        onClick={stock ? onOpen : undefined}
+        cursor={stock ? "pointer" : "not-allowed"}
+        textAlign="center"
+        w="200px"
+        justifyItems={"center"}
+        borderWidth="1px"
+        borderRadius="md"
+        borderColor="gray.300"
+        position="relative"
+        _hover={stock ? { borderColor: "blue.400", boxShadow: "md" } : {}}
+        opacity={stock ? 1 : 0.5}
+      >
+        {/* 在庫がない場合に「在庫なし」のテキストを被せる */}
+        {!stock && (
           <Box
-            onClick={onOpen}
-            cursor="pointer"
-            textAlign="center"
-            w="200px"
-            justifyItems={"center"}
-            borderWidth="1px"
+            position="absolute"
+            top="0"
+            left="0"
+            w="full"
+            h="full"
+            bg="rgba(0, 0, 0, 0.6)"
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            color="white"
+            fontSize="lg"
+            fontWeight="bold"
             borderRadius="md"
-            borderColor="gray.300"
-            _hover={{ borderColor: "blue.400", boxShadow: "md" }}
           >
-            <Image
-              src={imageSrc}
-              alt={name}
-              boxSize="150px"
-              objectFit="scale-down"
-            />
-            <Text mt={2}>{name}</Text>
-            <Text fontWeight="bold">{price}円</Text>
+            在庫なし
           </Box>
+        )}
+        <Image
+          src={imageSrc}
+          alt={name}
+          boxSize="150px"
+          objectFit="scale-down"
+        />
+        <Text mt={2}>{name}</Text>
+        <Text fontWeight="bold">{price}円</Text>
+      </Box>
 
-          <Modal isOpen={isOpen} onClose={onClose}>
-            <ModalOverlay />
-            <ModalContent>
-              <ModalHeader>{name}</ModalHeader>
-              <ModalCloseButton />
-              <ModalBody>
-                <HStack justifyContent={"center"}>
-                  <Image
-                    src={imageSrc}
-                    alt={name}
-                    boxSize="150px"
-                    objectFit="scale-down"
-                  />
-                </HStack>
-              </ModalBody>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>{name}</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <HStack justifyContent={"center"}>
+              <Image
+                src={imageSrc}
+                alt={name}
+                boxSize="150px"
+                objectFit="scale-down"
+              />
+            </HStack>
+          </ModalBody>
 
-              <ModalFooter>
-                <HStack
-                  spacing={3}
-                  alignItems="center"
-                  justifyContent="flex-start"
-                  w="full"
-                >
-                  <Text>枚数:</Text>
-                  <NumberInput
-                    aria-label="ds"
-                    min={1}
-                    max={stock}
-                    value={quantity}
-                    onChange={handleQuantityChange}
-                  >
-                    <NumberInputField />
-                    <NumberInputStepper>
-                      <NumberIncrementStepper />
-                      <NumberDecrementStepper />
-                    </NumberInputStepper>
-                  </NumberInput>
-                  <Button colorScheme="blue" onClick={onClose}>
-                    注文確定
-                  </Button>
-                </HStack>
-              </ModalFooter>
-            </ModalContent>
-          </Modal>
-        </>
-      ) : (
-        <></>
-      )}
+          <ModalFooter>
+            <HStack
+              spacing={5}
+              alignItems="center"
+              w="full"
+              justifyContent="center"
+            >
+              <Text>残り：{stock} 枚</Text>
+              <Button colorScheme="blue" onClick={order} disabled={!stock}>
+                注文確定
+              </Button>
+            </HStack>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </>
   );
 };
