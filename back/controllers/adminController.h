@@ -39,6 +39,7 @@ public:
         ADD_METHOD_TO(adminController::getImage,"/admin/image",Get);
         ADD_METHOD_TO(adminController::setHostDetail, "/admin/dobot/set", Get);
         ADD_METHOD_TO(adminController::doDobot, "/admin/dobot/do", Get);
+        ADD_METHOD_TO(adminController::goDobot, "/admin/dobot/go", Get);
         ADD_METHOD_TO(adminController::setImageLocation, "/admin/dobot/set/img/location", Get);
         ADD_METHOD_TO(adminController::setGlipperHost, "/admin/glipper/set", Get);
         ADD_METHOD_TO(adminController::setGlipperInitial, "/admin/glipper/initial", Get);
@@ -53,6 +54,7 @@ public:
     void setHostDetail(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
     // dobot do
     void doDobot(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
+    void goDobot(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
 
 
     void setGlipperHost(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);

@@ -51,7 +51,7 @@ void sockC::setting(std::string host, int port) {
     sockC::send_command(command_str,host,port);
 
     command["command"] ="SetCordinateSpeed";
-    command["velocity"] = 20;
+    command["velocity"] = 35;
     command["jerk"] = 3;
     command_str = command.dump();
     sockC::send_command(command_str,host,port);
@@ -60,6 +60,17 @@ void sockC::setting(std::string host, int port) {
 void sockC::moveArmParam(int x, int y, int z,int r,std::string host,int port) {
     json com2;
     com2["command"] = "JumpTo";
+    com2["x"] = x;
+    com2["y"] = y;
+    com2["z"] = z;
+    com2["r"] = r;
+    std::string command_str = com2.dump();
+    sockC::send_command(command_str,host,port);
+}
+
+void sockC::moveArmParamGo(int x, int y, int z,int r,std::string host,int port){
+    json com2;
+    com2["command"] = "GoTo";
     com2["x"] = x;
     com2["y"] = y;
     com2["z"] = z;

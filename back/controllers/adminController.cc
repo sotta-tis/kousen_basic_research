@@ -64,6 +64,26 @@ void adminController::doDobot(const drogon::HttpRequestPtr &req,
     callback(resp);
 }
 
+void adminController::goDobot(const drogon::HttpRequestPtr &req,
+                              std::function<void(const HttpResponsePtr &)> &&callback) {
+    drogon::HttpStatusCode statusCode=drogon::k200OK;
+    Json::Value jsonResponse;
+    try{
+        adminController::D_M_x = std::stoi(req->getParameter("x"));
+        adminController::D_M_y = std::stoi(req->getParameter("y"));
+        adminController::D_M_z = std::stoi(req->getParameter("z"));
+        adminController::D_M_r = std::stoi(req->getParameter("r"));
+
+        // DOBOTのアームを任意座標に移動
+        sockC::moveArmParamGo(adminController::D_M_x,adminController::D_M_y,adminController::D_M_z,adminController::D_M_r,adminController::DOBOT_HOST,adminController::DOBOT_PORT);
+    }catch (const std::exception& e) {
+        statusCode= drogon::k500InternalServerError;
+    }
+    auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
+    resp->setStatusCode(statusCode);
+    callback(resp);
+}
+
 void adminController::setGlipperHost(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback){
     drogon::HttpStatusCode statusCode=drogon::k200OK;
     Json::Value jsonResponse;
