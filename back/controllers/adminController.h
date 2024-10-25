@@ -40,7 +40,11 @@ public:
         ADD_METHOD_TO(adminController::setGlipperHost, "/admin/glipper/set", Get);
         ADD_METHOD_TO(adminController::setGlipperInitial, "/admin/glipper/initial", Get);
         ADD_METHOD_TO(adminController::setGlipperDo, "/admin/glipper/do/{action}", Get);
-        ADD_METHOD_TO(adminController::shutDown, "/admin/kill", Get);
+        ADD_METHOD_TO(adminController::setImagePointCoordinate, "/admin/image/coordinate", Get);
+        ADD_METHOD_TO(adminController::setReleasePointCoordinate, "/admin/release", Get);
+        ADD_METHOD_TO(adminController::setSushiZoneMaxCoordinate, "/admin/zone/max", Get);
+        ADD_METHOD_TO(adminController::setSushiZoneMinCoordinate, "/admin/zone/min", Get);
+        ADD_METHOD_TO(adminController::setSushiZoneHeight, "/admin/zone/height", Get);
     METHOD_LIST_END
 
     // システムシャットダウン
@@ -52,13 +56,12 @@ public:
     void doDobot(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
     void goDobot(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
 
-    //void setSushiZoneMaxCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
-    //void setSushiZoneMinCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
-    //void setSushiZoneHeight(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
+    void setSushiZoneMaxCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
+    void setSushiZoneMinCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
+    void setSushiZoneHeight(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
 
-    //void setReleasePointCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
-
-    //void setReleasePointCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
+    void setReleasePointCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
+    void setImagePointCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
 
     void setGlipperHost(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
     void setGlipperInitial(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);

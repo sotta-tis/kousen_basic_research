@@ -23,15 +23,18 @@ namespace commonData{
     extern int ZONE_MAX_y;
     extern int ZONE_MIN_x;
     extern int ZONE_MIN_y;
-    extern int ZONE_HEIGHT;
+    extern int ZONE_z;
+    extern int ZONE_r;
 
     extern int RELEASE_x;
     extern int RELEASE_y;
-    extern int RELEASE_HEIGHT;
+    extern int RELEASE_z;
+    extern int RELEASE_r;
 
     extern int IMAGE_x;
     extern int IMAGE_y;
-    extern int IMAGE_HEIGHT;
+    extern int IMAGE_z;
+    extern int IMAGE_r;
 
     extern std::set<drogon::WebSocketConnectionPtr> clients;  // clientsセットを外部からアクセス可能に
     extern std::mutex clientsMutex;

@@ -165,6 +165,23 @@ void adminController::getAdminProps(const drogon::HttpRequestPtr &req,
     jsonResponse["dobot"]["initial"]["location"]["img"]["width"]=adminController::img_box_width;
     jsonResponse["dobot"]["initial"]["location"]["img"]["height"]=adminController::img_box_height;
 
+    jsonResponse["location"]["zone"]["max_x"] = commonData::ZONE_MAX_x;
+    jsonResponse["location"]["zone"]["max_y"] = commonData::ZONE_MAX_y;
+    jsonResponse["location"]["zone"]["min_x"] = commonData::ZONE_MIN_x;
+    jsonResponse["location"]["zone"]["min_y"] = commonData::ZONE_MIN_y;
+    jsonResponse["location"]["zone"]["z"] = commonData::ZONE_z;
+    jsonResponse["location"]["zone"]["r"] = commonData::ZONE_r;
+
+    jsonResponse["location"]["release"]["x"] = commonData::RELEASE_x;
+    jsonResponse["location"]["release"]["y"] = commonData::RELEASE_y;
+    jsonResponse["location"]["release"]["z"] = commonData::RELEASE_z;
+    jsonResponse["location"]["release"]["r"] = commonData::RELEASE_r;
+
+    jsonResponse["location"]["image"]["x"] = commonData::IMAGE_x;
+    jsonResponse["location"]["image"]["y"] = commonData::IMAGE_y;
+    jsonResponse["location"]["image"]["z"] = commonData::IMAGE_z;
+    jsonResponse["location"]["image"]["r"] = commonData::IMAGE_r;
+
     jsonResponse["glip"]["host"] = adminController::SERVO_HOST;
     jsonResponse["glip"]["port"] = adminController::SERVO_PORT;
     jsonResponse["glip"]["standby"] = adminController::standby;
@@ -232,6 +249,85 @@ void adminController::setImageLocation(const HttpRequestPtr& req, std::function<
         statusCode=drogon::k501NotImplemented;
     }
 
+    auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
+    resp->setStatusCode(statusCode);
+    callback(resp);
+}
+
+void adminController::setSushiZoneMaxCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback){
+    drogon::HttpStatusCode statusCode=drogon::k200OK;
+    Json::Value jsonResponse;
+    try{
+        commonData::ZONE_MAX_x = std::stoi(req->getParameter("x"));
+        commonData::ZONE_MAX_y = std::stoi(req->getParameter("y"));
+
+    }catch (const std::exception& e) {
+        statusCode= drogon::k500InternalServerError;
+    }
+    auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
+    resp->setStatusCode(statusCode);
+    callback(resp);
+}
+
+void adminController::setSushiZoneMinCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback){
+    drogon::HttpStatusCode statusCode=drogon::k200OK;
+    Json::Value jsonResponse;
+    try{
+        commonData::ZONE_MIN_x = std::stoi(req->getParameter("x"));
+        commonData::ZONE_MIN_y = std::stoi(req->getParameter("y"));
+
+    }catch (const std::exception& e) {
+        statusCode= drogon::k500InternalServerError;
+    }
+    auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
+    resp->setStatusCode(statusCode);
+    callback(resp);
+}
+
+void adminController::setSushiZoneHeight(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback){
+    drogon::HttpStatusCode statusCode=drogon::k200OK;
+    Json::Value jsonResponse;
+    try{
+        commonData::ZONE_z = std::stoi(req->getParameter("z"));
+        commonData::ZONE_r = std::stoi(req->getParameter("r"));
+
+    }catch (const std::exception& e) {
+        statusCode= drogon::k500InternalServerError;
+    }
+    auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
+    resp->setStatusCode(statusCode);
+    callback(resp);
+}
+
+
+void adminController::setReleasePointCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback){
+    drogon::HttpStatusCode statusCode=drogon::k200OK;
+    Json::Value jsonResponse;
+    try{
+        commonData::RELEASE_x = std::stoi(req->getParameter("x"));
+        commonData::RELEASE_y = std::stoi(req->getParameter("y"));
+        commonData::RELEASE_z = std::stoi(req->getParameter("z"));
+        commonData::RELEASE_r = std::stoi(req->getParameter("r"));
+
+    }catch (const std::exception& e) {
+        statusCode= drogon::k500InternalServerError;
+    }
+    auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
+    resp->setStatusCode(statusCode);
+    callback(resp);
+}
+
+void adminController::setImagePointCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback){
+    drogon::HttpStatusCode statusCode=drogon::k200OK;
+    Json::Value jsonResponse;
+    try{
+        commonData::IMAGE_x = std::stoi(req->getParameter("x"));
+        commonData::IMAGE_y = std::stoi(req->getParameter("y"));
+        commonData::IMAGE_z = std::stoi(req->getParameter("z"));
+        commonData::IMAGE_r = std::stoi(req->getParameter("r"));
+    }catch (const std::exception& e) {
+        statusCode= drogon::k500InternalServerError;
+    }
     auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
     resp->setStatusCode(statusCode);
     callback(resp);

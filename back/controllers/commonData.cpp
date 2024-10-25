@@ -23,15 +23,18 @@ namespace commonData{
     int ZONE_MAX_y =0;
     int ZONE_MIN_x =0;
     int ZONE_MIN_y =0;
-    int ZONE_HEIGHT =0;
+    int ZONE_r =0;
+    int ZONE_z =0;
 
     int RELEASE_x =0;
     int RELEASE_y =0;
-    int RELEASE_HEIGHT =0;
+    int RELEASE_z =0;
+    int RELEASE_r =0;
 
     int IMAGE_x =0;
     int IMAGE_y =0;
-    int IMAGE_HEIGHT =0;
+    int IMAGE_z =0;
+    int IMAGE_r =0;
     // グローバル変数の定義
     std::queue<std::function<void()>> taskQueue;
     std::mutex queueMutex;
