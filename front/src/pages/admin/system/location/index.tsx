@@ -3,12 +3,17 @@ import { Box, Button, Text } from "@chakra-ui/react";
 import { GetServerSideProps } from "next";
 import { withAuth } from "../../../../libs/withAuth";
 import AdminLayout from "../../../../component/layouts/admin/adminLayout";
-import SystemPanel from "../../../../component/admin/system/system";
+import LocationSetting from "../../../../component/admin/system/LocationSetting";
 
 const Home = ({ serverData }): JSX.Element => {
   return (
     <AdminLayout pageKey={0}>
-      <SystemPanel dobot={serverData.dobot} glip={serverData.glip} />
+      <LocationSetting
+        x={serverData.dobot.x}
+        y={serverData.dobot.y}
+        z={serverData.dobot.z}
+        r={serverData.dobot.r}
+      />
     </AdminLayout>
   );
 };
