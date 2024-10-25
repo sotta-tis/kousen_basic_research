@@ -10,10 +10,6 @@ class adminController : public drogon::HttpController<adminController>
 private:
     std::string DOBOT_HOST="";
     int DOBOT_PORT=-1;
-    int D_M_x =0;
-    int D_M_y =0;
-    int D_M_z =0;
-    int D_M_r =0;
 
     std::string SERVO_HOST="";
     int SERVO_PORT=-1;
@@ -56,6 +52,13 @@ public:
     void doDobot(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
     void goDobot(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
 
+    //void setSushiZoneMaxCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
+    //void setSushiZoneMinCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
+    //void setSushiZoneHeight(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
+
+    //void setReleasePointCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
+
+    //void setReleasePointCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
 
     void setGlipperHost(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
     void setGlipperInitial(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);

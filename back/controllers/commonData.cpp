@@ -14,6 +14,24 @@
 using json = nlohmann::json;
 
 namespace commonData{
+    int D_M_x =0;
+    int D_M_y =0;
+    int D_M_z =0;
+    int D_M_r =0;
+
+    int ZONE_MAX_x =0;
+    int ZONE_MAX_y =0;
+    int ZONE_MIN_x =0;
+    int ZONE_MIN_y =0;
+    int ZONE_HEIGHT =0;
+
+    int RELEASE_x =0;
+    int RELEASE_y =0;
+    int RELEASE_HEIGHT =0;
+
+    int IMAGE_x =0;
+    int IMAGE_y =0;
+    int IMAGE_HEIGHT =0;
     // グローバル変数の定義
     std::queue<std::function<void()>> taskQueue;
     std::mutex queueMutex;

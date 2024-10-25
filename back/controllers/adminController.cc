@@ -49,13 +49,13 @@ void adminController::doDobot(const drogon::HttpRequestPtr &req,
     drogon::HttpStatusCode statusCode=drogon::k200OK;
     Json::Value jsonResponse;
     try{
-        adminController::D_M_x = std::stoi(req->getParameter("x"));
-        adminController::D_M_y = std::stoi(req->getParameter("y"));
-        adminController::D_M_z = std::stoi(req->getParameter("z"));
-        adminController::D_M_r = std::stoi(req->getParameter("r"));
+        commonData::D_M_x = std::stoi(req->getParameter("x"));
+        commonData::D_M_y = std::stoi(req->getParameter("y"));
+        commonData::D_M_z = std::stoi(req->getParameter("z"));
+        commonData::D_M_r = std::stoi(req->getParameter("r"));
 
         // DOBOTのアームを任意座標に移動
-        sockC::moveArmParam(adminController::D_M_x,adminController::D_M_y,adminController::D_M_z,adminController::D_M_r,adminController::DOBOT_HOST,adminController::DOBOT_PORT);
+        sockC::moveArmParam(commonData::D_M_x,commonData::D_M_y,commonData::D_M_z,commonData::D_M_r,adminController::DOBOT_HOST,adminController::DOBOT_PORT);
     }catch (const std::exception& e) {
         statusCode= drogon::k500InternalServerError;
     }
@@ -69,13 +69,13 @@ void adminController::goDobot(const drogon::HttpRequestPtr &req,
     drogon::HttpStatusCode statusCode=drogon::k200OK;
     Json::Value jsonResponse;
     try{
-        adminController::D_M_x = std::stoi(req->getParameter("x"));
-        adminController::D_M_y = std::stoi(req->getParameter("y"));
-        adminController::D_M_z = std::stoi(req->getParameter("z"));
-        adminController::D_M_r = std::stoi(req->getParameter("r"));
+        commonData::D_M_x = std::stoi(req->getParameter("x"));
+        commonData::D_M_y = std::stoi(req->getParameter("y"));
+        commonData::D_M_z = std::stoi(req->getParameter("z"));
+        commonData::D_M_r = std::stoi(req->getParameter("r"));
 
         // DOBOTのアームを任意座標に移動
-        sockC::moveArmParamGo(adminController::D_M_x,adminController::D_M_y,adminController::D_M_z,adminController::D_M_r,adminController::DOBOT_HOST,adminController::DOBOT_PORT);
+        sockC::moveArmParamGo(commonData::D_M_x,commonData::D_M_y,commonData::D_M_z,commonData::D_M_r,adminController::DOBOT_HOST,adminController::DOBOT_PORT);
     }catch (const std::exception& e) {
         statusCode= drogon::k500InternalServerError;
     }
@@ -155,10 +155,10 @@ void adminController::getAdminProps(const drogon::HttpRequestPtr &req,
 
     jsonResponse["dobot"]["host"]=adminController::DOBOT_HOST;
     jsonResponse["dobot"]["port"]=adminController::DOBOT_PORT;
-    jsonResponse["dobot"]["x"] = adminController::D_M_x;
-    jsonResponse["dobot"]["y"] = adminController::D_M_y;
-    jsonResponse["dobot"]["z"] = adminController::D_M_z;
-    jsonResponse["dobot"]["r"] = adminController::D_M_r;
+    jsonResponse["dobot"]["x"] = commonData::D_M_x;
+    jsonResponse["dobot"]["y"] = commonData::D_M_y;
+    jsonResponse["dobot"]["z"] = commonData::D_M_z;
+    jsonResponse["dobot"]["r"] = commonData::D_M_r;
 
     jsonResponse["dobot"]["initial"]["location"]["img"]["x"]=adminController::img_initial_x;
     jsonResponse["dobot"]["initial"]["location"]["img"]["y"]=adminController::img_initial_y;
