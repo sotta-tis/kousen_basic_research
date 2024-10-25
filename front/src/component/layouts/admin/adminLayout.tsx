@@ -33,7 +33,17 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, pageKey }) => {
               <AccordionIcon ml="auto" />
             </AccordionButton>
             <AccordionPanel p={4} bg="gray.700">
-              <NavItem path="/admin" title="システム設定" index={0} />
+              <NavItem path="/admin" title="接続設定" index={0} />
+              <NavItem
+                path="/admin/system/image"
+                title="カメラ設定"
+                index={0}
+              />
+              <NavItem
+                path="/admin/system/location"
+                title="座標設定"
+                index={0}
+              />
             </AccordionPanel>
           </AccordionItem>
 
@@ -50,7 +60,7 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, pageKey }) => {
             </AccordionButton>
             <AccordionPanel p={4} bg="gray.700">
               <NavItem path="/admin/dobot/setting" title="設定" index={3} />
-              <NavItem path="/admin/dobot/operate" title="座標" index={3} />
+              <NavItem path="/admin/dobot/operate" title="初期操作" index={3} />
             </AccordionPanel>
           </AccordionItem>
 
@@ -67,7 +77,11 @@ const AdminLayout: React.FC<AdminLayoutProps> = ({ children, pageKey }) => {
             </AccordionButton>
             <AccordionPanel p={4} bg="gray.700">
               <NavItem path="/admin/glipper/setting" title="設定" index={3} />
-              <NavItem path="/admin/glipper/operate" title="操作" index={3} />
+              <NavItem
+                path="/admin/glipper/operate"
+                title="初期操作"
+                index={3}
+              />
             </AccordionPanel>
           </AccordionItem>
         </Accordion>
