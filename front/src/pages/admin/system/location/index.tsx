@@ -13,6 +13,16 @@ const Home = ({ serverData }): JSX.Element => {
         y={serverData.dobot.y}
         z={serverData.dobot.z}
         r={serverData.dobot.r}
+        xMax={serverData.location.zone.max_x}
+        yMax={serverData.location.zone.max_y}
+        xMin={serverData.location.zone.min_x}
+        yMin={serverData.location.zone.min_y}
+        zoneR={serverData.location.zone.r}
+        zoneZ={serverData.location.zone.z}
+        rlsR={serverData.location.release.r}
+        rlsX={serverData.location.release.x}
+        rlsY={serverData.location.release.y}
+        rlsZ={serverData.location.release.z}
       />
     </AdminLayout>
   );

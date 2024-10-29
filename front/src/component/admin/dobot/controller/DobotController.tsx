@@ -72,14 +72,14 @@ const DobotController = ({ x, y, z, r }: DobotControllerProps) => {
   const handleCoordinateChange = (axis: string, increment: number) => {
     if (axis === "x") {
       setCoordinateX((prevX) =>
-        Math.max(0, Math.min(100, prevX + increment * 5))
+        Math.max(0, Math.min(300, prevX + increment * 5))
       );
     } else if (axis === "y") {
       setCoordinateY((prevY) =>
-        Math.max(0, Math.min(100, prevY + increment * 5))
+        Math.max(0, Math.min(300, prevY + increment * 5))
       );
     } else if (axis === "z") {
-      setCoordinateZ((prevZ) => Math.max(0, Math.min(100, prevZ + increment)));
+      setCoordinateZ((prevZ) => Math.max(0, Math.min(80, prevZ + increment)));
     }
   };
 
@@ -101,7 +101,7 @@ const DobotController = ({ x, y, z, r }: DobotControllerProps) => {
               <HStack spacing={4}>
                 <FormControl>
                   <FormLabel>X</FormLabel>
-                  <NumberInput value={coordinateX} min={0} max={100}>
+                  <NumberInput value={coordinateX} min={-100} max={300}>
                     <NumberInputField />
                     <NumberInputStepper>
                       <NumberIncrementStepper />
@@ -112,7 +112,7 @@ const DobotController = ({ x, y, z, r }: DobotControllerProps) => {
 
                 <FormControl>
                   <FormLabel>Y</FormLabel>
-                  <NumberInput value={coordinateY} min={0} max={100}>
+                  <NumberInput value={coordinateY} min={-100} max={300}>
                     <NumberInputField />
                     <NumberInputStepper>
                       <NumberIncrementStepper />

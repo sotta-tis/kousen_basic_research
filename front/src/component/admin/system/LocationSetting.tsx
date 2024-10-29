@@ -26,9 +26,36 @@ type ConnectionFormProps = {
   y: string;
   z: string;
   r: string;
+
+  xMin: number;
+  yMin: number;
+  xMax: number;
+  yMax: number;
+  zoneR: number;
+  zoneZ: number;
+
+  rlsX: number;
+  rlsY: number;
+  rlsZ: number;
+  rlsR: number;
 };
 
-const ImageSetting = ({ x, y, z, r }: ConnectionFormProps) => {
+const ImageSetting = ({
+  x,
+  y,
+  z,
+  r,
+  xMin,
+  yMin,
+  xMax,
+  yMax,
+  zoneR,
+  zoneZ,
+  rlsR,
+  rlsX,
+  rlsY,
+  rlsZ,
+}: ConnectionFormProps) => {
   const [jsonResponse, setJsonResponse] = useState(null);
   const [error, setError] = useState(null);
   const [imageSrc, setImageSrc] = useState(null);
@@ -127,6 +154,16 @@ const ImageSetting = ({ x, y, z, r }: ConnectionFormProps) => {
           y={parseInt(y)}
           z={parseInt(z)}
           r={parseInt(r)}
+          xMin={xMin}
+          xMax={xMax}
+          yMax={yMax}
+          yMin={yMin}
+          zoneR={zoneR}
+          zoneZ={zoneZ}
+          rlsR={rlsR}
+          rlsX={rlsX}
+          rlsY={rlsY}
+          rlsZ={rlsZ}
         />
       </Box>
     </>
