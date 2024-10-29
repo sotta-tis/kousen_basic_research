@@ -55,7 +55,9 @@ void adminController::doDobot(const drogon::HttpRequestPtr &req,
         commonData::D_M_r = std::stoi(req->getParameter("r"));
 
         // DOBOTのアームを任意座標に移動
-        sockC::moveArmParam(commonData::D_M_x,commonData::D_M_y,commonData::D_M_z,commonData::D_M_r,adminController::DOBOT_HOST,adminController::DOBOT_PORT);
+        commonData::addTask([this]() {
+            sockC::moveArmParam(commonData::D_M_x,commonData::D_M_y,commonData::D_M_z,commonData::D_M_r,adminController::DOBOT_HOST,adminController::DOBOT_PORT);
+        });
     }catch (const std::exception& e) {
         statusCode= drogon::k500InternalServerError;
     }
@@ -75,7 +77,9 @@ void adminController::goDobot(const drogon::HttpRequestPtr &req,
         commonData::D_M_r = std::stoi(req->getParameter("r"));
 
         // DOBOTのアームを任意座標に移動
-        sockC::moveArmParamGo(commonData::D_M_x,commonData::D_M_y,commonData::D_M_z,commonData::D_M_r,adminController::DOBOT_HOST,adminController::DOBOT_PORT);
+        commonData::addTask([this]() {
+            sockC::moveArmParamGo(commonData::D_M_x,commonData::D_M_y,commonData::D_M_z,commonData::D_M_r,adminController::DOBOT_HOST,adminController::DOBOT_PORT);
+        });
     }catch (const std::exception& e) {
         statusCode= drogon::k500InternalServerError;
     }

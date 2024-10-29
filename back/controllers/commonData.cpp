@@ -51,7 +51,7 @@ namespace commonData{
             {5,0},
             {6,0}
     };
-    std::vector<std::vector<float>> sushiBoxes;
+    std::vector<std::pair<int,std::vector<float>>> sushiBoxes;
     int sushiCount;
 
     void sentMessageToWebsockets(const std::string &message)
@@ -189,12 +189,12 @@ namespace commonData{
                 std::vector<std::vector<float>> boundingBoxesLocation = jsonRes["detection_boxes"];
                 std::vector<double> scores = jsonRes["detection_scores"];
 
-                std::vector<std::vector<float>> boxes;
+                std::vector<std::pair<int,std::vector<float>>> boxes;
                 std::map<int,int> label;
                 for(int i=0;i<scores.size();i++){
                     if(scores[i]>=0.5) {
                         label[classLabels[i]]+=1;
-                        boxes.push_back(boundingBoxesLocation[i]);
+                        boxes.push_back(std::make_pair(classLabels[i],boundingBoxesLocation[i]));
                     }
                 }
 
@@ -208,9 +208,10 @@ namespace commonData{
 
 
     // JSONレスポンスを解析してバウンディングボックスを描画する関数
-    void drawBoundingBoxesAndSave(const cv::Mat& image, const std::vector<std::vector<float>>& boxes, const std::string& savePath) {
+    void drawBoundingBoxesAndSave(const cv::Mat& image, const std::vector<std::pair<int,std::vector<float>>>& boxes, const std::string& savePath) {
         // 各バウンディングボックスを描画
-        for (const auto& box : boxes) {
+        for (const auto& boxx : boxes) {
+            std::vector<float> box = boxx.second;
             // バウンディングボックスの座標 (左上x, 左上y, 右下x, 右下y)
             int x1 = static_cast<int>(box[1] * image.cols);
             int y1 = static_cast<int>(box[0] * image.rows);

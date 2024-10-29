@@ -48,7 +48,7 @@ namespace commonData{
     extern bool stopTaskRunner;
 
     extern std::map<int,int> sushiLabel;
-    extern std::vector<std::vector<float>> sushiBoxes;
+    extern std::vector<std::pair<int,std::vector<float>>> sushiBoxes;
     extern int sushiCount;
 
     cv::Mat cropImage(const cv::Mat& inputImage, int cropWidth, int cropHeight, double scale);
@@ -67,5 +67,5 @@ namespace commonData{
     void taskRunner();
 
     void objectDetection(const cv::Mat& image, const std::string& server_url);
-    void drawBoundingBoxesAndSave(const cv::Mat& image, const std::vector<std::vector<float>>& boxes, const std::string& savePath);
+    void drawBoundingBoxesAndSave(const cv::Mat& image, const std::vector<std::pair<int,std::vector<float>>>& boxes, const std::string& savePath);
 }
