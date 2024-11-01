@@ -11,9 +11,18 @@
 #include <opencv2/opencv.hpp>
 #include <map>
 #include <string>
+#include "servoClient.h"
 
 
 namespace commonData{
+    extern double  scale;
+
+    extern std::unique_ptr<ServoClient> servoClient;
+
+    extern int standby;
+    extern int close ;
+    extern int open ;
+
     extern std::string DOBOT_HOST;
     extern int DOBOT_PORT;
 

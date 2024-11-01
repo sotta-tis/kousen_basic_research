@@ -18,10 +18,6 @@ private:
     int close = 0;
     int open = 0;
 
-    double  scale = 0.1;
-
-    std::unique_ptr<ServoClient> servoClient;
-
 public:
     METHOD_LIST_BEGIN
     // use METHOD_ADD to add your custom processing function here;

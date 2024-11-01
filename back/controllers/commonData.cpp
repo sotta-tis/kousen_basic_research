@@ -15,6 +15,14 @@
 using json = nlohmann::json;
 
 namespace commonData{
+    double  scale = 0.1;
+
+    std::unique_ptr<ServoClient> servoClient;
+
+     int standby = 0;
+     int close = 0;
+     int open = 0;
+
     std::string DOBOT_HOST="--";
     int DOBOT_PORT=0;
 
@@ -277,10 +285,18 @@ namespace commonData{
                 // DOBOTのアームを任意座標に移動
                 commonData::addTask([trgCoordinateX,trgCoordinateY,i,label]() {
                     try{
+                        commonData::servoClient->sendAngle(commonData::standby);
                         sockC::moveArmParam(trgCoordinateX,trgCoordinateY,commonData::ZONE_z,commonData::ZONE_r,commonData::DOBOT_HOST,commonData::DOBOT_PORT);
+                        commonData::servoClient->sendAngle(commonData::close);
+                        sockC::moveArmParam(RELEASE_x,RELEASE_y,RELEASE_z,RELEASE_r,commonData::DOBOT_HOST,commonData::DOBOT_PORT);
+                        commonData::servoClient->sendAngle(commonData::open);
+
                         sushiBoxes.erase(sushiBoxes.begin() + i);
                         sushiLabel[label] -= 1;
                         sushiCount -=1;
+
+                        cv::Mat image= commonData::cropImage(commonData::getImageFromCameraOrPath("aa"),320,320,commonData::scale);
+                        commonData::objectDetection(image,"http://127.0.0.1:8881");
                     }catch (std::exception& e){
                         std::cout<<"error:occurred"<<std::endl;
                     }

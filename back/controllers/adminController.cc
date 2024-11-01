@@ -99,9 +99,9 @@ void adminController::setGlipperHost(const HttpRequestPtr& req, std::function<vo
         adminController::SERVO_HOST = req->getParameter("ipAddress");
         adminController::SERVO_PORT = std::stoi(req->getParameter("port"));
 
-        servoClient = std::make_unique<ServoClient>(req->getParameter("ipAddress"),std::stoi(req->getParameter("port")));
+        commonData::servoClient = std::make_unique<ServoClient>(req->getParameter("ipAddress"),std::stoi(req->getParameter("port")));
 
-        if(servoClient->connectToServer()){
+        if(commonData::servoClient->connectToServer()){
             std::cout<<"servo connection!!"<<std::endl;
         }
 
@@ -119,9 +119,9 @@ void adminController::setGlipperInitial(const HttpRequestPtr& req, std::function
     Json::Value jsonResponse;
 
     try {
-        adminController::standby = std::stoi(req->getParameter("standby"));
-        adminController::close = std::stoi(req->getParameter("close"));
-        adminController::open = std::stoi(req->getParameter("open"));
+        commonData::standby = std::stoi(req->getParameter("standby"));
+        commonData::close = std::stoi(req->getParameter("close"));
+        commonData::open = std::stoi(req->getParameter("open"));
     }catch(const std::exception& e){
         statusCode=drogon::k500InternalServerError;
     }
@@ -137,13 +137,13 @@ void adminController::setGlipperDo(const HttpRequestPtr& req, std::function<void
     Json::Value jsonResponse;
     try {
         if (action == "standby") {
-            servoClient->sendAngle(adminController::standby);
+            commonData::servoClient->sendAngle(commonData::standby);
         }
         if (action == "close") {
-            servoClient->sendAngle(adminController::close);
+            commonData::servoClient->sendAngle(commonData::close);
         }
         if (action == "open") {
-            servoClient->sendAngle(adminController::open);
+            commonData::servoClient->sendAngle(commonData::open);
         }
     }catch (const std::exception& e){
         statusCode = drogon::k500InternalServerError;
@@ -191,11 +191,11 @@ void adminController::getAdminProps(const drogon::HttpRequestPtr &req,
 
     jsonResponse["glip"]["host"] = adminController::SERVO_HOST;
     jsonResponse["glip"]["port"] = adminController::SERVO_PORT;
-    jsonResponse["glip"]["standby"] = adminController::standby;
-    jsonResponse["glip"]["close"] = adminController::close;
-    jsonResponse["glip"]["open"] = adminController::open;
+    jsonResponse["glip"]["standby"] = commonData::standby;
+    jsonResponse["glip"]["close"] = commonData::close;
+    jsonResponse["glip"]["open"] = commonData::open;
 
-    jsonResponse["image"]["scale"] = adminController::scale;
+    jsonResponse["image"]["scale"] = commonData::scale;
 
     jsonResponse["sushi"]["count"] = commonData::sushiCount;
     for (const auto& pair : commonData::sushiLabel){
@@ -211,8 +211,8 @@ void adminController::getAdminProps(const drogon::HttpRequestPtr &req,
 
 void adminController::getImage(const drogon::HttpRequestPtr &req,
                                     std::function<void(const HttpResponsePtr &)> &&callback){
-    adminController::scale = std::stod(req->getParameter("scale"));
-    cv::Mat image= commonData::cropImage(commonData::getImageFromCameraOrPath("aa"),320,320,adminController::scale);
+    commonData::scale = std::stod(req->getParameter("scale"));
+    cv::Mat image= commonData::cropImage(commonData::getImageFromCameraOrPath("aa"),320,320,commonData::scale);
 
     // 画像をJPEG形式でエンコード
     std::vector<uchar> buffer;
@@ -248,7 +248,7 @@ void adminController::setImageLocation(const HttpRequestPtr& req, std::function<
         commonData::img_box_height = std::stod(req->getParameter("height"));
 
         commonData::addTask([this]() {
-            cv::Mat image= commonData::cropImage(commonData::getImageFromCameraOrPath("aa"),320,320,adminController::scale);
+            cv::Mat image= commonData::cropImage(commonData::getImageFromCameraOrPath("aa"),320,320,commonData::scale);
             commonData::objectDetection(image,"http://127.0.0.1:8881");
         });
 
