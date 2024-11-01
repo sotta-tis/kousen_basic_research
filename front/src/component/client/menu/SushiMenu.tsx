@@ -21,6 +21,7 @@ interface ItemProps {
   price: string;
   name: string;
   stock: number;
+  label: number;
 }
 
 interface MenuProps {
@@ -28,14 +29,20 @@ interface MenuProps {
   menu: { [key: string]: number };
 }
 
-const SushiItem: React.FC<ItemProps> = ({ imageSrc, price, name, stock }) => {
+const SushiItem: React.FC<ItemProps> = ({
+  imageSrc,
+  price,
+  name,
+  stock,
+  label,
+}) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [loading, setLoading] = useState(false);
   const toast = useToast();
 
   const order = async () => {
     setLoading(true);
-    const urlToFetch = `${process.env.NEXT_PUBLIC_BACKEND_API_ENDPOINT}/order`;
+    const urlToFetch = `${process.env.NEXT_PUBLIC_BACKEND_API_ENDPOINT}/order/${label}`;
     try {
       const res = await fetch(
         `/api/proxy?url=${encodeURIComponent(urlToFetch)}`
@@ -149,7 +156,7 @@ const SushiItem: React.FC<ItemProps> = ({ imageSrc, price, name, stock }) => {
 const SushiMenu: React.FC<MenuProps> = ({ count, menu }) => {
   const items = {
     6: {
-      imageSrc: "/salmon.png",
+      imageSrc: "/ebi.png",
       price: "100",
       name: "えび",
       stock: menu["6"],
@@ -167,8 +174,13 @@ const SushiMenu: React.FC<MenuProps> = ({ count, menu }) => {
       stock: menu["2"],
     },
     3: { imageSrc: "/ika.png", price: "100", name: "いか", stock: menu["3"] },
-    4: { imageSrc: "/ika.png", price: "100", name: "うに", stock: menu["4"] },
-    5: { imageSrc: "/ika.png", price: "100", name: "たまご", stock: menu["5"] },
+    4: { imageSrc: "/uni.png", price: "100", name: "うに", stock: menu["4"] },
+    5: {
+      imageSrc: "/tamago.png",
+      price: "100",
+      name: "たまご",
+      stock: menu["5"],
+    },
   };
 
   return (
@@ -176,6 +188,7 @@ const SushiMenu: React.FC<MenuProps> = ({ count, menu }) => {
       {Object.values(items).map((item, index) => (
         <SushiItem
           key={index}
+          label={index + 1}
           imageSrc={item.imageSrc}
           price={item.price}
           name={item.name}
