@@ -14,6 +14,9 @@
 
 
 namespace commonData{
+    extern std::string DOBOT_HOST;
+    extern int DOBOT_PORT;
+
     extern int D_M_x;
     extern int D_M_y;
     extern int D_M_z;
@@ -23,6 +26,8 @@ namespace commonData{
     extern int ZONE_MAX_y;
     extern int ZONE_MIN_x;
     extern int ZONE_MIN_y;
+    extern int ZONE_X_diff;
+    extern int ZONE_Y_diff;
     extern int ZONE_z;
     extern int ZONE_r;
 
@@ -36,6 +41,11 @@ namespace commonData{
     extern int IMAGE_z;
     extern int IMAGE_r;
 
+    extern double img_initial_x;
+    extern double img_initial_y;
+    extern double img_box_width;
+    extern double img_box_height;
+
     extern std::set<drogon::WebSocketConnectionPtr> clients;  // clientsセットを外部からアクセス可能に
     extern std::mutex clientsMutex;
 
@@ -48,7 +58,7 @@ namespace commonData{
     extern bool stopTaskRunner;
 
     extern std::map<int,int> sushiLabel;
-    extern std::vector<std::pair<int,std::vector<float>>> sushiBoxes;
+    extern std::vector<std::pair<int,std::vector<double>>> sushiBoxes;
     extern int sushiCount;
 
     cv::Mat cropImage(const cv::Mat& inputImage, int cropWidth, int cropHeight, double scale);
@@ -67,5 +77,6 @@ namespace commonData{
     void taskRunner();
 
     void objectDetection(const cv::Mat& image, const std::string& server_url);
-    void drawBoundingBoxesAndSave(const cv::Mat& image, const std::vector<std::pair<int,std::vector<float>>>& boxes, const std::string& savePath);
+    void drawBoundingBoxesAndSave(const cv::Mat& image, const std::vector<std::pair<int,std::vector<double>>>& boxes, const std::string& savePath);
+    void order(int label);
 }

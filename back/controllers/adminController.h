@@ -19,10 +19,6 @@ private:
     int open = 0;
 
     double  scale = 0.1;
-    double img_initial_x = 0;
-    double img_initial_y = 0;
-    double img_box_width = 0;
-    double img_box_height = 0;
 
     std::unique_ptr<ServoClient> servoClient;
 

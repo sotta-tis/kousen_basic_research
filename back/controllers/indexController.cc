@@ -28,6 +28,7 @@ void indexController::order(const HttpRequestPtr &req, std::function<void (const
     try {
 
         statusCode=drogon::k200OK;
+        commonData::order(label);
     }catch(const std::exception& e){
         statusCode=drogon::k500InternalServerError;
     }

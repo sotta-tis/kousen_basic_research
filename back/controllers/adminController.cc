@@ -33,6 +33,9 @@ void adminController::setHostDetail(const drogon::HttpRequestPtr &req,
         adminController::DOBOT_HOST = req->getParameter("ipAddress");
         adminController::DOBOT_PORT = std::stoi(req->getParameter("port"));
 
+        commonData::DOBOT_HOST = adminController::DOBOT_HOST;
+        commonData::DOBOT_PORT = adminController::DOBOT_PORT;
+
         // 通信
         sockC::setting(adminController::DOBOT_HOST,adminController::DOBOT_PORT);
 
@@ -164,10 +167,10 @@ void adminController::getAdminProps(const drogon::HttpRequestPtr &req,
     jsonResponse["dobot"]["z"] = commonData::D_M_z;
     jsonResponse["dobot"]["r"] = commonData::D_M_r;
 
-    jsonResponse["dobot"]["initial"]["location"]["img"]["x"]=adminController::img_initial_x;
-    jsonResponse["dobot"]["initial"]["location"]["img"]["y"]=adminController::img_initial_y;
-    jsonResponse["dobot"]["initial"]["location"]["img"]["width"]=adminController::img_box_width;
-    jsonResponse["dobot"]["initial"]["location"]["img"]["height"]=adminController::img_box_height;
+    jsonResponse["dobot"]["initial"]["location"]["img"]["x"]=commonData::img_initial_x;
+    jsonResponse["dobot"]["initial"]["location"]["img"]["y"]=commonData::img_initial_y;
+    jsonResponse["dobot"]["initial"]["location"]["img"]["width"]=commonData::img_box_width;
+    jsonResponse["dobot"]["initial"]["location"]["img"]["height"]=commonData::img_box_height;
 
     jsonResponse["location"]["zone"]["max_x"] = commonData::ZONE_MAX_x;
     jsonResponse["location"]["zone"]["max_y"] = commonData::ZONE_MAX_y;
@@ -239,10 +242,10 @@ void adminController::setImageLocation(const HttpRequestPtr& req, std::function<
     Json::Value jsonResponse;
 
     try{
-        adminController::img_initial_x = std::stod(req->getParameter("x"));
-        adminController::img_initial_y = std::stod(req->getParameter("y"));
-        adminController::img_box_width = std::stod(req->getParameter("width"));
-        adminController::img_box_height = std::stod(req->getParameter("height"));
+        commonData::img_initial_x = std::stod(req->getParameter("x"));
+        commonData::img_initial_y = std::stod(req->getParameter("y"));
+        commonData::img_box_width = std::stod(req->getParameter("width"));
+        commonData::img_box_height = std::stod(req->getParameter("height"));
 
         commonData::addTask([this]() {
             cv::Mat image= commonData::cropImage(commonData::getImageFromCameraOrPath("aa"),320,320,adminController::scale);
@@ -265,6 +268,9 @@ void adminController::setSushiZoneMaxCoordinate(const HttpRequestPtr& req, std::
         commonData::ZONE_MAX_x = std::stoi(req->getParameter("x"));
         commonData::ZONE_MAX_y = std::stoi(req->getParameter("y"));
 
+        commonData::ZONE_X_diff = commonData::ZONE_MAX_x - commonData::ZONE_MIN_x;
+        commonData::ZONE_Y_diff = commonData::ZONE_MAX_y - commonData::ZONE_MIN_y;
+
     }catch (const std::exception& e) {
         statusCode= drogon::k500InternalServerError;
     }
@@ -279,6 +285,9 @@ void adminController::setSushiZoneMinCoordinate(const HttpRequestPtr& req, std::
     try{
         commonData::ZONE_MIN_x = std::stoi(req->getParameter("x"));
         commonData::ZONE_MIN_y = std::stoi(req->getParameter("y"));
+
+        commonData::ZONE_X_diff = commonData::ZONE_MAX_x - commonData::ZONE_MIN_x;
+        commonData::ZONE_Y_diff = commonData::ZONE_MAX_y - commonData::ZONE_MIN_y;
 
     }catch (const std::exception& e) {
         statusCode= drogon::k500InternalServerError;
