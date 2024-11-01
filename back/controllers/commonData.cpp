@@ -279,8 +279,8 @@ namespace commonData{
                 double zoneVecX = ZONE_X_diff / std::sqrt( (ZONE_X_diff*ZONE_X_diff) + (ZONE_Y_diff*ZONE_Y_diff) );
                 double zoneVecY = ZONE_Y_diff / std::sqrt( (ZONE_X_diff*ZONE_X_diff) + (ZONE_Y_diff*ZONE_Y_diff) );
 
-                double trgCoordinateX = (double)ZONE_MIN_x + (zoneVecX * tiltX / img_box_width * ZONE_X_diff);
-                double trgCoordinateY = (double)ZONE_MIN_y + (zoneVecY * tiltY / img_box_height * ZONE_Y_diff);
+                double trgCoordinateX = (double)ZONE_MIN_x + (zoneVecX * tiltX / img_box_width * abs(ZONE_X_diff));
+                double trgCoordinateY = (double)ZONE_MIN_y + (zoneVecY * tiltY / img_box_height * abs(ZONE_Y_diff));
 
                 // DOBOTのアームを任意座標に移動
                 commonData::addTask([trgCoordinateX,trgCoordinateY,i,label]() {
