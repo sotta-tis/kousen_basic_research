@@ -292,7 +292,14 @@ namespace commonData{
                         commonData::servoClient->sendAngle(commonData::open,false);
 
                         sushiBoxes.erase(sushiBoxes.begin() + i);
-                        sushiLabel[label] -= 1;
+                        sushiLabel={
+                                {1, 0},
+                                {2,0},
+                                {3,0},
+                                {4,0},
+                                {5,0},
+                                {6,0}
+                        };
                         sushiCount -=1;
 
                         cv::Mat image= commonData::cropImage(commonData::getImageFromCameraOrPath("aa"),320,320,commonData::scale);
