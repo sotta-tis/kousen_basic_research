@@ -8,6 +8,8 @@
 #include <unistd.h>
 #include "json.hpp"
 
+#include "commonData.h"
+
 using json = nlohmann::json;
 
 void sockC::send_command(const std::string& command, const std::string& host , int port){
@@ -51,7 +53,7 @@ void sockC::setting(std::string host, int port) {
     sockC::send_command(command_str,host,port);
 
     command["command"] ="SetCordinateSpeed";
-    command["velocity"] = 20;
+    command["velocity"] = 35;
     command["jerk"] = 3;
     command_str = command.dump();
     sockC::send_command(command_str,host,port);
@@ -66,6 +68,19 @@ void sockC::moveArmParam(int x, int y, int z,int r,std::string host,int port) {
     com2["r"] = r;
     std::string command_str = com2.dump();
     sockC::send_command(command_str,host,port);
+    commonData::D_M_x=x; commonData::D_M_y=y; commonData::D_M_r = r; commonData::D_M_z =z;
+}
+
+void sockC::moveArmParamGo(int x, int y, int z,int r,std::string host,int port){
+    json com2;
+    com2["command"] = "GoTo";
+    com2["x"] = x;
+    com2["y"] = y;
+    com2["z"] = z;
+    com2["r"] = r;
+    std::string command_str = com2.dump();
+    sockC::send_command(command_str,host,port);
+    commonData::D_M_x=x; commonData::D_M_y=y; commonData::D_M_r = r; commonData::D_M_z =z;
 }
 
 void sockC::quit(std::string host, int port) {

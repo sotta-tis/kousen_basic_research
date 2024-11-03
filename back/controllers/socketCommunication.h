@@ -14,5 +14,6 @@ namespace sockC{
 
     void setting(std::string host,int port);
     void moveArmParam(int x, int y, int z,int r,std::string host,int port) ;
+    void moveArmParamGo(int x, int y, int z,int r,std::string host,int port) ;
     void quit(std::string host,int port);
 }

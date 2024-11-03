@@ -33,6 +33,9 @@ void adminController::setHostDetail(const drogon::HttpRequestPtr &req,
         adminController::DOBOT_HOST = req->getParameter("ipAddress");
         adminController::DOBOT_PORT = std::stoi(req->getParameter("port"));
 
+        commonData::DOBOT_HOST = adminController::DOBOT_HOST;
+        commonData::DOBOT_PORT = adminController::DOBOT_PORT;
+
         // 通信
         sockC::setting(adminController::DOBOT_HOST,adminController::DOBOT_PORT);
 
@@ -49,13 +52,37 @@ void adminController::doDobot(const drogon::HttpRequestPtr &req,
     drogon::HttpStatusCode statusCode=drogon::k200OK;
     Json::Value jsonResponse;
     try{
-        adminController::D_M_x = std::stoi(req->getParameter("x"));
-        adminController::D_M_y = std::stoi(req->getParameter("y"));
-        adminController::D_M_z = std::stoi(req->getParameter("z"));
-        adminController::D_M_r = std::stoi(req->getParameter("r"));
+        commonData::D_M_x = std::stoi(req->getParameter("x"));
+        commonData::D_M_y = std::stoi(req->getParameter("y"));
+        commonData::D_M_z = std::stoi(req->getParameter("z"));
+        commonData::D_M_r = std::stoi(req->getParameter("r"));
 
         // DOBOTのアームを任意座標に移動
-        sockC::moveArmParam(adminController::D_M_x,adminController::D_M_y,adminController::D_M_z,adminController::D_M_r,adminController::DOBOT_HOST,adminController::DOBOT_PORT);
+        commonData::addTask([this]() {
+            sockC::moveArmParam(commonData::D_M_x,commonData::D_M_y,commonData::D_M_z,commonData::D_M_r,adminController::DOBOT_HOST,adminController::DOBOT_PORT);
+        });
+    }catch (const std::exception& e) {
+        statusCode= drogon::k500InternalServerError;
+    }
+    auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
+    resp->setStatusCode(statusCode);
+    callback(resp);
+}
+
+void adminController::goDobot(const drogon::HttpRequestPtr &req,
+                              std::function<void(const HttpResponsePtr &)> &&callback) {
+    drogon::HttpStatusCode statusCode=drogon::k200OK;
+    Json::Value jsonResponse;
+    try{
+        commonData::D_M_x = std::stoi(req->getParameter("x"));
+        commonData::D_M_y = std::stoi(req->getParameter("y"));
+        commonData::D_M_z = std::stoi(req->getParameter("z"));
+        commonData::D_M_r = std::stoi(req->getParameter("r"));
+
+        // DOBOTのアームを任意座標に移動
+        commonData::addTask([this]() {
+            sockC::moveArmParamGo(commonData::D_M_x,commonData::D_M_y,commonData::D_M_z,commonData::D_M_r,adminController::DOBOT_HOST,adminController::DOBOT_PORT);
+        });
     }catch (const std::exception& e) {
         statusCode= drogon::k500InternalServerError;
     }
@@ -72,9 +99,9 @@ void adminController::setGlipperHost(const HttpRequestPtr& req, std::function<vo
         adminController::SERVO_HOST = req->getParameter("ipAddress");
         adminController::SERVO_PORT = std::stoi(req->getParameter("port"));
 
-        servoClient = std::make_unique<ServoClient>(req->getParameter("ipAddress"),std::stoi(req->getParameter("port")));
+        commonData::servoClient = std::make_unique<ServoClient>(req->getParameter("ipAddress"),std::stoi(req->getParameter("port")));
 
-        if(servoClient->connectToServer()){
+        if(commonData::servoClient->connectToServer()){
             std::cout<<"servo connection!!"<<std::endl;
         }
 
@@ -92,9 +119,9 @@ void adminController::setGlipperInitial(const HttpRequestPtr& req, std::function
     Json::Value jsonResponse;
 
     try {
-        adminController::standby = std::stoi(req->getParameter("standby"));
-        adminController::close = std::stoi(req->getParameter("close"));
-        adminController::open = std::stoi(req->getParameter("open"));
+        commonData::standby = std::stoi(req->getParameter("standby"));
+        commonData::close = std::stoi(req->getParameter("close"));
+        commonData::open = std::stoi(req->getParameter("open"));
     }catch(const std::exception& e){
         statusCode=drogon::k500InternalServerError;
     }
@@ -110,13 +137,13 @@ void adminController::setGlipperDo(const HttpRequestPtr& req, std::function<void
     Json::Value jsonResponse;
     try {
         if (action == "standby") {
-            servoClient->sendAngle(adminController::standby);
+            commonData::servoClient->sendAngle(commonData::standby,false);
         }
         if (action == "close") {
-            servoClient->sendAngle(adminController::close);
+            commonData::servoClient->sendAngle(commonData::close,false);
         }
         if (action == "open") {
-            servoClient->sendAngle(adminController::open);
+            commonData::servoClient->sendAngle(commonData::open,false);
         }
     }catch (const std::exception& e){
         statusCode = drogon::k500InternalServerError;
@@ -135,23 +162,40 @@ void adminController::getAdminProps(const drogon::HttpRequestPtr &req,
 
     jsonResponse["dobot"]["host"]=adminController::DOBOT_HOST;
     jsonResponse["dobot"]["port"]=adminController::DOBOT_PORT;
-    jsonResponse["dobot"]["x"] = adminController::D_M_x;
-    jsonResponse["dobot"]["y"] = adminController::D_M_y;
-    jsonResponse["dobot"]["z"] = adminController::D_M_z;
-    jsonResponse["dobot"]["r"] = adminController::D_M_r;
+    jsonResponse["dobot"]["x"] = commonData::D_M_x;
+    jsonResponse["dobot"]["y"] = commonData::D_M_y;
+    jsonResponse["dobot"]["z"] = commonData::D_M_z;
+    jsonResponse["dobot"]["r"] = commonData::D_M_r;
 
-    jsonResponse["dobot"]["initial"]["location"]["img"]["x"]=adminController::img_initial_x;
-    jsonResponse["dobot"]["initial"]["location"]["img"]["y"]=adminController::img_initial_y;
-    jsonResponse["dobot"]["initial"]["location"]["img"]["width"]=adminController::img_box_width;
-    jsonResponse["dobot"]["initial"]["location"]["img"]["height"]=adminController::img_box_height;
+    jsonResponse["dobot"]["initial"]["location"]["img"]["x"]=commonData::img_initial_x;
+    jsonResponse["dobot"]["initial"]["location"]["img"]["y"]=commonData::img_initial_y;
+    jsonResponse["dobot"]["initial"]["location"]["img"]["width"]=commonData::img_box_width;
+    jsonResponse["dobot"]["initial"]["location"]["img"]["height"]=commonData::img_box_height;
+
+    jsonResponse["location"]["zone"]["max_x"] = commonData::ZONE_MAX_x;
+    jsonResponse["location"]["zone"]["max_y"] = commonData::ZONE_MAX_y;
+    jsonResponse["location"]["zone"]["min_x"] = commonData::ZONE_MIN_x;
+    jsonResponse["location"]["zone"]["min_y"] = commonData::ZONE_MIN_y;
+    jsonResponse["location"]["zone"]["z"] = commonData::ZONE_z;
+    jsonResponse["location"]["zone"]["r"] = commonData::ZONE_r;
+
+    jsonResponse["location"]["release"]["x"] = commonData::RELEASE_x;
+    jsonResponse["location"]["release"]["y"] = commonData::RELEASE_y;
+    jsonResponse["location"]["release"]["z"] = commonData::RELEASE_z;
+    jsonResponse["location"]["release"]["r"] = commonData::RELEASE_r;
+
+    jsonResponse["location"]["image"]["x"] = commonData::IMAGE_x;
+    jsonResponse["location"]["image"]["y"] = commonData::IMAGE_y;
+    jsonResponse["location"]["image"]["z"] = commonData::IMAGE_z;
+    jsonResponse["location"]["image"]["r"] = commonData::IMAGE_r;
 
     jsonResponse["glip"]["host"] = adminController::SERVO_HOST;
     jsonResponse["glip"]["port"] = adminController::SERVO_PORT;
-    jsonResponse["glip"]["standby"] = adminController::standby;
-    jsonResponse["glip"]["close"] = adminController::close;
-    jsonResponse["glip"]["open"] = adminController::open;
+    jsonResponse["glip"]["standby"] = commonData::standby;
+    jsonResponse["glip"]["close"] = commonData::close;
+    jsonResponse["glip"]["open"] = commonData::open;
 
-    jsonResponse["image"]["scale"] = adminController::scale;
+    jsonResponse["image"]["scale"] = commonData::scale;
 
     jsonResponse["sushi"]["count"] = commonData::sushiCount;
     for (const auto& pair : commonData::sushiLabel){
@@ -167,8 +211,8 @@ void adminController::getAdminProps(const drogon::HttpRequestPtr &req,
 
 void adminController::getImage(const drogon::HttpRequestPtr &req,
                                     std::function<void(const HttpResponsePtr &)> &&callback){
-    adminController::scale = std::stod(req->getParameter("scale"));
-    cv::Mat image= commonData::cropImage(commonData::getImageFromCameraOrPath("aa"),320,320,adminController::scale);
+    commonData::scale = std::stod(req->getParameter("scale"));
+    cv::Mat image= commonData::cropImage(commonData::getImageFromCameraOrPath("aa"),320,320,commonData::scale);
 
     // 画像をJPEG形式でエンコード
     std::vector<uchar> buffer;
@@ -198,13 +242,13 @@ void adminController::setImageLocation(const HttpRequestPtr& req, std::function<
     Json::Value jsonResponse;
 
     try{
-        adminController::img_initial_x = std::stod(req->getParameter("x"));
-        adminController::img_initial_y = std::stod(req->getParameter("y"));
-        adminController::img_box_width = std::stod(req->getParameter("width"));
-        adminController::img_box_height = std::stod(req->getParameter("height"));
+        commonData::img_initial_x = std::stod(req->getParameter("x"));
+        commonData::img_initial_y = std::stod(req->getParameter("y"));
+        commonData::img_box_width = std::stod(req->getParameter("width"));
+        commonData::img_box_height = std::stod(req->getParameter("height"));
 
         commonData::addTask([this]() {
-            cv::Mat image= commonData::cropImage(commonData::getImageFromCameraOrPath("aa"),320,320,adminController::scale);
+            cv::Mat image= commonData::cropImage(commonData::getImageFromCameraOrPath("aa"),320,320,commonData::scale);
             commonData::objectDetection(image,"http://127.0.0.1:8881");
         });
 
@@ -212,6 +256,91 @@ void adminController::setImageLocation(const HttpRequestPtr& req, std::function<
         statusCode=drogon::k501NotImplemented;
     }
 
+    auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
+    resp->setStatusCode(statusCode);
+    callback(resp);
+}
+
+void adminController::setSushiZoneMaxCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback){
+    drogon::HttpStatusCode statusCode=drogon::k200OK;
+    Json::Value jsonResponse;
+    try{
+        commonData::ZONE_MAX_x = std::stoi(req->getParameter("x"));
+        commonData::ZONE_MAX_y = std::stoi(req->getParameter("y"));
+
+        commonData::ZONE_X_diff = commonData::ZONE_MAX_x - commonData::ZONE_MIN_x;
+        commonData::ZONE_Y_diff = commonData::ZONE_MAX_y - commonData::ZONE_MIN_y;
+
+    }catch (const std::exception& e) {
+        statusCode= drogon::k500InternalServerError;
+    }
+    auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
+    resp->setStatusCode(statusCode);
+    callback(resp);
+}
+
+void adminController::setSushiZoneMinCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback){
+    drogon::HttpStatusCode statusCode=drogon::k200OK;
+    Json::Value jsonResponse;
+    try{
+        commonData::ZONE_MIN_x = std::stoi(req->getParameter("x"));
+        commonData::ZONE_MIN_y = std::stoi(req->getParameter("y"));
+
+        commonData::ZONE_X_diff = commonData::ZONE_MAX_x - commonData::ZONE_MIN_x;
+        commonData::ZONE_Y_diff = commonData::ZONE_MAX_y - commonData::ZONE_MIN_y;
+
+    }catch (const std::exception& e) {
+        statusCode= drogon::k500InternalServerError;
+    }
+    auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
+    resp->setStatusCode(statusCode);
+    callback(resp);
+}
+
+void adminController::setSushiZoneHeight(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback){
+    drogon::HttpStatusCode statusCode=drogon::k200OK;
+    Json::Value jsonResponse;
+    try{
+        commonData::ZONE_z = std::stoi(req->getParameter("z"));
+        commonData::ZONE_r = std::stoi(req->getParameter("r"));
+
+    }catch (const std::exception& e) {
+        statusCode= drogon::k500InternalServerError;
+    }
+    auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
+    resp->setStatusCode(statusCode);
+    callback(resp);
+}
+
+
+void adminController::setReleasePointCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback){
+    drogon::HttpStatusCode statusCode=drogon::k200OK;
+    Json::Value jsonResponse;
+    try{
+        commonData::RELEASE_x = std::stoi(req->getParameter("x"));
+        commonData::RELEASE_y = std::stoi(req->getParameter("y"));
+        commonData::RELEASE_z = std::stoi(req->getParameter("z"));
+        commonData::RELEASE_r = std::stoi(req->getParameter("r"));
+
+    }catch (const std::exception& e) {
+        statusCode= drogon::k500InternalServerError;
+    }
+    auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
+    resp->setStatusCode(statusCode);
+    callback(resp);
+}
+
+void adminController::setImagePointCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback){
+    drogon::HttpStatusCode statusCode=drogon::k200OK;
+    Json::Value jsonResponse;
+    try{
+        commonData::IMAGE_x = std::stoi(req->getParameter("x"));
+        commonData::IMAGE_y = std::stoi(req->getParameter("y"));
+        commonData::IMAGE_z = std::stoi(req->getParameter("z"));
+        commonData::IMAGE_r = std::stoi(req->getParameter("r"));
+    }catch (const std::exception& e) {
+        statusCode= drogon::k500InternalServerError;
+    }
     auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
     resp->setStatusCode(statusCode);
     callback(resp);

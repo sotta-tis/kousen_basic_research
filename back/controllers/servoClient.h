@@ -16,7 +16,7 @@ public:
     ServoClient(const std::string &ip, int port);
     ~ServoClient();
     bool connectToServer();
-    bool sendAngle(int angle);
+    bool sendAngle(int angle,bool isDish);
 };
 
 #endif

@@ -10,10 +10,51 @@
 #include "json.hpp"
 #include <map>
 #include <json/json.h>
+#include "socketCommunication.h"
 
 using json = nlohmann::json;
 
 namespace commonData{
+    double  scale = 0.1;
+
+    std::unique_ptr<ServoClient> servoClient;
+
+     int standby = 0;
+     int close = 0;
+     int open = 0;
+
+    std::string DOBOT_HOST="--";
+    int DOBOT_PORT=0;
+
+    int D_M_x =0;
+    int D_M_y =0;
+    int D_M_z =0;
+    int D_M_r =0;
+
+    int ZONE_MAX_x =0;
+    int ZONE_MAX_y =0;
+    int ZONE_MIN_x =0;
+    int ZONE_MIN_y =0;
+    int ZONE_X_diff = 0;
+    int ZONE_Y_diff = 0;
+    int ZONE_r =0;
+    int ZONE_z =0;
+
+    int RELEASE_x =0;
+    int RELEASE_y =0;
+    int RELEASE_z =0;
+    int RELEASE_r =0;
+
+    int IMAGE_x =0;
+    int IMAGE_y =0;
+    int IMAGE_z =0;
+    int IMAGE_r =0;
+
+    double img_initial_x = 0;
+    double img_initial_y = 0;
+    double img_box_width = 0;
+    double img_box_height = 0;
+
     // グローバル変数の定義
     std::queue<std::function<void()>> taskQueue;
     std::mutex queueMutex;
@@ -30,7 +71,7 @@ namespace commonData{
             {5,0},
             {6,0}
     };
-    std::vector<std::vector<float>> sushiBoxes;
+    std::vector<std::pair<int,std::vector<double>>> sushiBoxes;
     int sushiCount;
 
     void sentMessageToWebsockets(const std::string &message)
@@ -165,46 +206,117 @@ namespace commonData{
                 auto jsonRes = json::parse(response->body());
                 int countObjects = jsonRes["num_detections"];
                 std::vector<int> classLabels = jsonRes["detection_classes"];
-                std::vector<std::vector<float>> boundingBoxesLocation = jsonRes["detection_boxes"];
+                std::vector<std::vector<double>> boundingBoxesLocation = jsonRes["detection_boxes"];
                 std::vector<double> scores = jsonRes["detection_scores"];
 
-                std::vector<std::vector<float>> boxes;
+                std::vector<std::pair<int,std::vector<double>>> boxes;
                 std::map<int,int> label;
                 for(int i=0;i<scores.size();i++){
                     if(scores[i]>=0.5) {
                         label[classLabels[i]]+=1;
-                        boxes.push_back(boundingBoxesLocation[i]);
+                        std::vector<double> buffBox;
+                        buffBox.push_back(static_cast<double>(boundingBoxesLocation[i][1] * image.cols));
+                        buffBox.push_back(static_cast<double>(boundingBoxesLocation[i][0] * image.rows));
+                        buffBox.push_back(static_cast<double>(boundingBoxesLocation[i][3] * image.cols));
+                        buffBox.push_back(static_cast<double>(boundingBoxesLocation[i][2] * image.rows));
+
+                        boxes.push_back(std::make_pair(classLabels[i],buffBox));
                     }
                 }
 
                 commonData::sushiBoxes = boxes;
                 commonData::sushiLabel = label;
                 commonData::sushiCount = boxes.size();
-                commonData::drawBoundingBoxesAndSave(image,boxes,"sample.jpg");
+                commonData::drawBoundingBoxesAndSave(image,boxes,"../../front/public/sample.jpg");
             }
         });
     }
 
 
     // JSONレスポンスを解析してバウンディングボックスを描画する関数
-    void drawBoundingBoxesAndSave(const cv::Mat& image, const std::vector<std::vector<float>>& boxes, const std::string& savePath) {
+    void drawBoundingBoxesAndSave(const cv::Mat& image, const std::vector<std::pair<int,std::vector<double>>>& boxes, const std::string& savePath) {
         // 各バウンディングボックスを描画
-        for (const auto& box : boxes) {
+        for (const auto& boxx : boxes) {
+            std::vector<double> box = boxx.second;
             // バウンディングボックスの座標 (左上x, 左上y, 右下x, 右下y)
-            int x1 = static_cast<int>(box[1] * image.cols);
-            int y1 = static_cast<int>(box[0] * image.rows);
-            int x2 = static_cast<int>(box[3] * image.cols);
-            int y2 = static_cast<int>(box[2] * image.rows);
+            double x1 = box[0];
+            double y1 = box[1];
+            double x2 = box[2];
+            double y2 = box[3];
 
-            std::cout<<box[1]<<','<<box[0]<<','<<box[2]<<','<<box[3]<<','<<std::endl;
+            std::cout<<x1<<','<<y1<<','<<x2<<','<<y2<<','<<std::endl;
 
             // 矩形（バウンディングボックス）を描画する
             cv::rectangle(image, cv::Point(x1, y1), cv::Point(x2, y2), cv::Scalar(0, 255, 0), 2);
         }
 
+        cv::rectangle(image, cv::Point(commonData::img_initial_x, commonData::img_initial_y), cv::Point(commonData::img_initial_x + commonData::img_box_width, commonData::img_initial_y + commonData::img_box_height), cv::Scalar(0, 255, 0), 2);
         // 画像を保存
         cv::imwrite(savePath, image);
 
         std::cout << "Image saved to: " << savePath << std::endl;
     }
+
+    void order(int label){
+        std::vector<double> initialVector;
+        initialVector.push_back(img_box_width / std::sqrt((img_box_height*img_box_height) + img_box_width*img_box_width));
+        initialVector.push_back(img_box_height / std::sqrt((img_box_height*img_box_height) + img_box_width*img_box_width));
+
+        for(int i=0;i<sushiBoxes.size();i++){
+            if(sushiBoxes[i].first == label){
+                std::vector<double> srcVector = sushiBoxes[i].second;
+                std::vector<double> trgVector;
+                double diffX = srcVector[2] - srcVector[0];
+                double diffY = srcVector[3] - srcVector[1];
+                double trgOnImgX = srcVector[0] + (diffX/2) - img_initial_x ;
+                double trgOnImgY = srcVector[1] + (diffY/2) - img_initial_y ;
+                trgVector.push_back(diffX / std::sqrt( (diffX*diffX) + (diffY*diffY) ));
+                trgVector.push_back(diffY / std::sqrt( (diffX*diffX) + (diffY*diffY) ));
+
+                double tiltX = trgOnImgX / initialVector[0];
+                double tiltY = trgOnImgY / initialVector[1];
+
+                double zoneVecX = ZONE_X_diff / std::sqrt( (ZONE_X_diff*ZONE_X_diff) + (ZONE_Y_diff*ZONE_Y_diff) );
+                double zoneVecY = ZONE_Y_diff / std::sqrt( (ZONE_X_diff*ZONE_X_diff) + (ZONE_Y_diff*ZONE_Y_diff) );
+
+                double trgCoordinateX = (double)ZONE_MIN_x + (zoneVecX * tiltX / img_box_width * abs(ZONE_X_diff));
+                double trgCoordinateY = (double)ZONE_MIN_y + (zoneVecY * tiltY / img_box_height * abs(ZONE_Y_diff));
+
+                // DOBOTのアームを任意座標に移動
+                commonData::addTask([trgCoordinateX,trgCoordinateY,i,label]() {
+                    try{
+                        commonData::servoClient->sendAngle(commonData::standby,false);
+                        sockC::moveArmParam(trgCoordinateX,trgCoordinateY,commonData::ZONE_z,commonData::ZONE_r,commonData::DOBOT_HOST,commonData::DOBOT_PORT);
+                        commonData::servoClient->sendAngle(commonData::close,false);
+                        sockC::moveArmParam(RELEASE_x,RELEASE_y,RELEASE_z,RELEASE_r,commonData::DOBOT_HOST,commonData::DOBOT_PORT);
+                        commonData::servoClient->sendAngle(commonData::open,false);
+
+                        sushiBoxes.erase(sushiBoxes.begin() + i);
+                        sushiLabel={
+                                {1, 0},
+                                {2,0},
+                                {3,0},
+                                {4,0},
+                                {5,0},
+                                {6,0}
+                        };
+                        sushiCount -=1;
+
+                        cv::Mat image= commonData::cropImage(commonData::getImageFromCameraOrPath("aa"),320,320,commonData::scale);
+                        commonData::objectDetection(image,"http://127.0.0.1:8881");
+                    }catch (std::exception& e){
+                        std::cout<<"error:occurred"<<std::endl;
+                    }
+
+                });
+            }
+        }
+    }
+
 }
+/*
+ *          int x1 = static_cast<int>(box[1] * image.cols);
+            int y1 = static_cast<int>(box[0] * image.rows);
+            int x2 = static_cast<int>(box[3] * image.cols);
+            int y2 = static_cast<int>(box[2] * image.rows);
+ */
