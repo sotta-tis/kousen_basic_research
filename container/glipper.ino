@@ -11,10 +11,14 @@ WiFiServer server(80);
 // サーボモーター設定
 Servo myservo;
 int servoPin = 18;  // サーボモーター制御ピン
+int dishServoPin = 19;
+
+bool isDish = false;
 
 void setup() {
     Serial.begin(115200);
     myservo.attach(servoPin);
+    dishServo.attch(dishServoPin);
 
     // WiFi接続
     WiFi.begin(ssid, password);
@@ -46,15 +50,25 @@ void loop() {
                     if (currentLine.length() > 0) {
                         int angle = currentLine.toInt();  // 受信データを整数に変換
                         if (angle >= 0 && angle <= 180) {
-                            myservo.write(angle);  // サーボモーター角度制御
-                            client.println("Angle set to " + String(angle));
+                            if(isDish){
+                                dishServo.write(angle);  // サーボモーター角度制御
+                                client.println("Angle set to " + String(angle));
+                                isDish = false;
+                            }else{
+                                myservo.write(angle);  // サーボモーター角度制御
+                                client.println("Angle set to " + String(angle));
+                            }
                         } else {
                             client.println("Invalid angle.");
                         }
                     }
                     currentLine = "";
                 } else if (c != '\r') {
-                    currentLine += c;  // 受信データを蓄積
+                    if(c == 'd'){
+                        isDish = true;
+                    }else{
+                        currentLine += c;  // 受信データを蓄積
+                    }
                 }
             }
         }

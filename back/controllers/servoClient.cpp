@@ -29,9 +29,15 @@ bool ServoClient::connectToServer() {
     return true;
 }
 
-bool ServoClient::sendAngle(int angle) {
+bool ServoClient::sendAngle(int angle,bool isDish) {
+    std::string message;
     // 角度を文字列に変換して送信
-    std::string message = std::to_string(angle) + "\n";
+    if(isDish){
+        message = 'd' + std::to_string(angle) + "\n";
+    }else{
+        message = std::to_string(angle) + "\n";
+    }
+
     if (send(sock, message.c_str(), message.size(), 0) < 0) {
         std::cerr << "Send failed" << std::endl;
         return false;

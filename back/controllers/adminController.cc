@@ -137,13 +137,13 @@ void adminController::setGlipperDo(const HttpRequestPtr& req, std::function<void
     Json::Value jsonResponse;
     try {
         if (action == "standby") {
-            commonData::servoClient->sendAngle(commonData::standby);
+            commonData::servoClient->sendAngle(commonData::standby,false);
         }
         if (action == "close") {
-            commonData::servoClient->sendAngle(commonData::close);
+            commonData::servoClient->sendAngle(commonData::close,false);
         }
         if (action == "open") {
-            commonData::servoClient->sendAngle(commonData::open);
+            commonData::servoClient->sendAngle(commonData::open,false);
         }
     }catch (const std::exception& e){
         statusCode = drogon::k500InternalServerError;

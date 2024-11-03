@@ -285,11 +285,11 @@ namespace commonData{
                 // DOBOTのアームを任意座標に移動
                 commonData::addTask([trgCoordinateX,trgCoordinateY,i,label]() {
                     try{
-                        commonData::servoClient->sendAngle(commonData::standby);
+                        commonData::servoClient->sendAngle(commonData::standby,false);
                         sockC::moveArmParam(trgCoordinateX,trgCoordinateY,commonData::ZONE_z,commonData::ZONE_r,commonData::DOBOT_HOST,commonData::DOBOT_PORT);
-                        commonData::servoClient->sendAngle(commonData::close);
+                        commonData::servoClient->sendAngle(commonData::close,false);
                         sockC::moveArmParam(RELEASE_x,RELEASE_y,RELEASE_z,RELEASE_r,commonData::DOBOT_HOST,commonData::DOBOT_PORT);
-                        commonData::servoClient->sendAngle(commonData::open);
+                        commonData::servoClient->sendAngle(commonData::open,false);
 
                         sushiBoxes.erase(sushiBoxes.begin() + i);
                         sushiLabel[label] -= 1;
