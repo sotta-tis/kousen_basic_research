@@ -79,7 +79,7 @@ const DobotController = ({ x, y, z, r }: DobotControllerProps) => {
         Math.max(0, Math.min(300, prevY + increment * 5))
       );
     } else if (axis === "z") {
-      setCoordinateZ((prevZ) => Math.max(0, Math.min(80, prevZ + increment)));
+      setCoordinateZ((prevZ) => Math.max(0, Math.min(120, prevZ + increment)));
     }
   };
 
