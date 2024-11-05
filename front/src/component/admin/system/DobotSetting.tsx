@@ -31,6 +31,16 @@ type DobotControllerProps = {
   rlsY: number;
   rlsZ: number;
   rlsR: number;
+
+  dishX: number;
+  dishY: number;
+  dishZ: number;
+  dishR: number;
+
+  dishRlsX: number;
+  dishRlsY: number;
+  dishRlsZ: number;
+  dishRlsR: number;
 };
 
 const DobotSetting = ({
@@ -48,6 +58,15 @@ const DobotSetting = ({
   rlsX,
   rlsY,
   rlsZ,
+  dishX,
+  dishY,
+  dishZ,
+  dishR,
+
+  dishRlsX,
+  dishRlsY,
+  dishRlsZ,
+  dishRlsR,
 }: DobotControllerProps) => {
   const [coordinateX, setCoordinateX] = useState(x);
   const [coordinateY, setCoordinateY] = useState(y);
@@ -144,6 +163,26 @@ const DobotSetting = ({
     const query = `?x=${coordinateX}&y=${coordinateY}&z=${coordinateZ}&r=${coordinateR}`;
     try {
       const urlToFetch = `${process.env.NEXT_PUBLIC_BACKEND_API_ENDPOINT}/admin/release${query}`;
+      await fetch(`/api/proxy?url=${encodeURIComponent(urlToFetch)}`);
+    } catch (error) {
+      console.error("Failed to send data", error);
+    }
+  };
+
+  const handleSubmitDishPlace = async (e: React.FormEvent) => {
+    const query = `?x=${coordinateX}&y=${coordinateY}&z=${coordinateZ}&r=${coordinateR}`;
+    try {
+      const urlToFetch = `${process.env.NEXT_PUBLIC_BACKEND_API_ENDPOINT}/admin/zone/dish${query}`;
+      await fetch(`/api/proxy?url=${encodeURIComponent(urlToFetch)}`);
+    } catch (error) {
+      console.error("Failed to send data", error);
+    }
+  };
+
+  const handleSubmitReturnDishPlace = async (e: React.FormEvent) => {
+    const query = `?x=${coordinateX}&y=${coordinateY}&z=${coordinateZ}&r=${coordinateR}`;
+    try {
+      const urlToFetch = `${process.env.NEXT_PUBLIC_BACKEND_API_ENDPOINT}/admin/dish/release${query}`;
       await fetch(`/api/proxy?url=${encodeURIComponent(urlToFetch)}`);
     } catch (error) {
       console.error("Failed to send data", error);
@@ -364,7 +403,7 @@ const DobotSetting = ({
                 size={"auto"}
                 padding={2}
               >
-                返却場所
+                寿司移動場所
               </Button>
               <FormControl>
                 <FormLabel whiteSpace="nowrap">X : {rlsX}</FormLabel>
@@ -377,6 +416,54 @@ const DobotSetting = ({
               </FormControl>
               <FormControl>
                 <FormLabel whiteSpace="nowrap">R : {rlsR}</FormLabel>
+              </FormControl>
+            </HStack>
+          </Box>
+          <Box as="form" onSubmit={handleSubmitDishPlace} mb={4}>
+            <HStack spacing={4} alignContent="end">
+              <Button
+                type="submit"
+                colorScheme="teal"
+                size={"auto"}
+                padding={2}
+              >
+                皿掴む
+              </Button>
+              <FormControl>
+                <FormLabel whiteSpace="nowrap">X : {dishX}</FormLabel>
+              </FormControl>
+              <FormControl>
+                <FormLabel whiteSpace="nowrap">Y : {dishY}</FormLabel>
+              </FormControl>
+              <FormControl>
+                <FormLabel whiteSpace="nowrap">Z : {dishZ}</FormLabel>
+              </FormControl>
+              <FormControl>
+                <FormLabel whiteSpace="nowrap">R : {dishR}</FormLabel>
+              </FormControl>
+            </HStack>
+          </Box>
+          <Box as="form" onSubmit={handleSubmitReturnDishPlace} mb={4}>
+            <HStack spacing={4} alignContent="end">
+              <Button
+                type="submit"
+                colorScheme="teal"
+                size={"auto"}
+                padding={2}
+              >
+                皿リリース
+              </Button>
+              <FormControl>
+                <FormLabel whiteSpace="nowrap">X : {dishRlsX}</FormLabel>
+              </FormControl>
+              <FormControl>
+                <FormLabel whiteSpace="nowrap">Y : {dishRlsY}</FormLabel>
+              </FormControl>
+              <FormControl>
+                <FormLabel whiteSpace="nowrap">Z : {dishRlsZ}</FormLabel>
+              </FormControl>
+              <FormControl>
+                <FormLabel whiteSpace="nowrap">R : {dishRlsR}</FormLabel>
               </FormControl>
             </HStack>
           </Box>

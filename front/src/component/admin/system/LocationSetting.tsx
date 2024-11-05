@@ -38,6 +38,16 @@ type ConnectionFormProps = {
   rlsY: number;
   rlsZ: number;
   rlsR: number;
+
+  dishX: number;
+  dishY: number;
+  dishZ: number;
+  dishR: number;
+
+  dishRlsX: number;
+  dishRlsY: number;
+  dishRlsZ: number;
+  dishRlsR: number;
 };
 
 const ImageSetting = ({
@@ -55,6 +65,15 @@ const ImageSetting = ({
   rlsX,
   rlsY,
   rlsZ,
+  dishX,
+  dishY,
+  dishZ,
+  dishR,
+
+  dishRlsX,
+  dishRlsY,
+  dishRlsZ,
+  dishRlsR,
 }: ConnectionFormProps) => {
   const [jsonResponse, setJsonResponse] = useState(null);
   const [error, setError] = useState(null);
@@ -164,6 +183,14 @@ const ImageSetting = ({
           rlsX={rlsX}
           rlsY={rlsY}
           rlsZ={rlsZ}
+          dishX={dishX}
+          dishY={dishY}
+          dishR={dishR}
+          dishZ={dishZ}
+          dishRlsX={dishRlsX}
+          dishRlsY={dishRlsY}
+          dishRlsR={dishRlsR}
+          dishRlsZ={dishRlsZ}
         />
       </Box>
     </>
