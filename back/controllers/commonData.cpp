@@ -304,6 +304,11 @@ namespace commonData{
                         commonData::servoClient->sendAngle(commonData::close,false);
                         sockC::moveArmParam(RELEASE_x,RELEASE_y,RELEASE_z,RELEASE_r,commonData::DOBOT_HOST,commonData::DOBOT_PORT);
                         commonData::servoClient->sendAngle(commonData::open,false);
+                        commonData::servoClient->sendAngle(commonData::dishStandby,true);
+                        sockC::moveArmParam(DISH_x,DISH_y,DISH_z,DISH_r,commonData::DOBOT_HOST,commonData::DOBOT_PORT);
+                        commonData::servoClient->sendAngle(commonData::dishClose,true);
+                        sockC::moveArmParam(RELEASE_DISH_x,RELEASE_DISH_y,RELEASE_DISH_z,RELEASE_DISH_r,commonData::DOBOT_HOST,commonData::DOBOT_PORT);
+                        commonData::servoClient->sendAngle(commonData::dishOpen,true);
 
                         sushiBoxes.erase(sushiBoxes.begin() + i);
                         sushiLabel={
