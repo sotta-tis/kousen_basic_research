@@ -54,6 +54,16 @@ namespace commonData{
     int IMAGE_z =0;
     int IMAGE_r =0;
 
+    int DISH_x = 0;
+    int DISH_y = 0;
+    int DISH_z = 0;
+    int DISH_r = 0;
+
+    int RELEASE_DISH_x = 0;
+    int RELEASE_DISH_y = 0;
+    int RELEASE_DISH_z = 0;
+    int RELEASE_DISH_r = 0;
+
     double img_initial_x = 0;
     double img_initial_y = 0;
     double img_box_width = 0;

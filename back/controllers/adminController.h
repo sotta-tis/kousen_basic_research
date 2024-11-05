@@ -39,6 +39,8 @@ public:
         ADD_METHOD_TO(adminController::setSushiZoneMaxCoordinate, "/admin/zone/max", Get);
         ADD_METHOD_TO(adminController::setSushiZoneMinCoordinate, "/admin/zone/min", Get);
         ADD_METHOD_TO(adminController::setSushiZoneHeight, "/admin/zone/height", Get);
+        ADD_METHOD_TO(adminController::setDishPointCoordinate, "/admin/zone/dish", Get);
+        ADD_METHOD_TO(adminController::setDishReleasePointCoordinate, "/admin/dish/release", Get);
         ADD_METHOD_TO(adminController::shutDown, "/admin/kill", Get);
     METHOD_LIST_END
 
@@ -56,6 +58,8 @@ public:
     void setSushiZoneHeight(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
 
     void setReleasePointCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
+    void setDishPointCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
+    void setDishReleasePointCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
     void setImagePointCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
 
     void setGlipperHost(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);

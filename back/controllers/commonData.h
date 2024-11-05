@@ -48,6 +48,16 @@ namespace commonData{
     extern int RELEASE_z;
     extern int RELEASE_r;
 
+    extern int DISH_x;
+    extern int DISH_y;
+    extern int DISH_z;
+    extern int DISH_r;
+
+    extern int RELEASE_DISH_x;
+    extern int RELEASE_DISH_y;
+    extern int RELEASE_DISH_z;
+    extern int RELEASE_DISH_r;
+
     extern int IMAGE_x;
     extern int IMAGE_y;
     extern int IMAGE_z;

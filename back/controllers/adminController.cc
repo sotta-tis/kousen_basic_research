@@ -229,6 +229,16 @@ void adminController::getAdminProps(const drogon::HttpRequestPtr &req,
     jsonResponse["location"]["image"]["z"] = commonData::IMAGE_z;
     jsonResponse["location"]["image"]["r"] = commonData::IMAGE_r;
 
+    jsonResponse["location"]["dish"]["x"] = commonData::DISH_x;
+    jsonResponse["location"]["dish"]["y"] = commonData::DISH_y;
+    jsonResponse["location"]["dish"]["z"] = commonData::DISH_z;
+    jsonResponse["location"]["dish"]["r"] = commonData::DISH_r;
+
+    jsonResponse["location"]["dRelease"]["x"] = commonData::RELEASE_DISH_x;
+    jsonResponse["location"]["dRelease"]["y"] = commonData::RELEASE_DISH_y;
+    jsonResponse["location"]["dRelease"]["z"] = commonData::RELEASE_DISH_z;
+    jsonResponse["location"]["dRelease"]["r"] = commonData::RELEASE_DISH_r;
+
     jsonResponse["glip"]["host"] = adminController::SERVO_HOST;
     jsonResponse["glip"]["port"] = adminController::SERVO_PORT;
     jsonResponse["glip"]["standby"] = commonData::standby;
@@ -381,6 +391,38 @@ void adminController::setImagePointCoordinate(const HttpRequestPtr& req, std::fu
         commonData::IMAGE_y = std::stoi(req->getParameter("y"));
         commonData::IMAGE_z = std::stoi(req->getParameter("z"));
         commonData::IMAGE_r = std::stoi(req->getParameter("r"));
+    }catch (const std::exception& e) {
+        statusCode= drogon::k500InternalServerError;
+    }
+    auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
+    resp->setStatusCode(statusCode);
+    callback(resp);
+}
+
+void adminController::setDishPointCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback){
+    drogon::HttpStatusCode statusCode=drogon::k200OK;
+    Json::Value jsonResponse;
+    try{
+        commonData::DISH_x = std::stoi(req->getParameter("x"));
+        commonData::DISH_y = std::stoi(req->getParameter("y"));
+        commonData::DISH_z = std::stoi(req->getParameter("z"));
+        commonData::DISH_r = std::stoi(req->getParameter("r"));
+    }catch (const std::exception& e) {
+        statusCode= drogon::k500InternalServerError;
+    }
+    auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
+    resp->setStatusCode(statusCode);
+    callback(resp);
+}
+
+void adminController::setDishReleasePointCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback){
+    drogon::HttpStatusCode statusCode=drogon::k200OK;
+    Json::Value jsonResponse;
+    try{
+        commonData::RELEASE_DISH_x = std::stoi(req->getParameter("x"));
+        commonData::RELEASE_DISH_y = std::stoi(req->getParameter("y"));
+        commonData::RELEASE_DISH_z = std::stoi(req->getParameter("z"));
+        commonData::RELEASE_DISH_r = std::stoi(req->getParameter("r"));
     }catch (const std::exception& e) {
         statusCode= drogon::k500InternalServerError;
     }
