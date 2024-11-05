@@ -131,6 +131,23 @@ void adminController::setGlipperInitial(const HttpRequestPtr& req, std::function
     resp->setStatusCode(statusCode);
     callback(resp);
 };
+void adminController::setDishGlipperInitial(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback){
+    drogon::HttpStatusCode statusCode=drogon::k200OK;
+    Json::Value jsonResponse;
+
+    try {
+        commonData::dishStandby = std::stoi(req->getParameter("standby"));
+        commonData::dishClose = std::stoi(req->getParameter("close"));
+        commonData::dishOpen = std::stoi(req->getParameter("open"));
+    }catch(const std::exception& e){
+        statusCode=drogon::k500InternalServerError;
+    }
+
+    // JSONレスポンスを作成して返す
+    auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
+    resp->setStatusCode(statusCode);
+    callback(resp);
+};
 
 void adminController::setGlipperDo(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback,std::string action){
     drogon::HttpStatusCode statusCode=drogon::k200OK;
@@ -144,6 +161,29 @@ void adminController::setGlipperDo(const HttpRequestPtr& req, std::function<void
         }
         if (action == "open") {
             commonData::servoClient->sendAngle(commonData::open,false);
+        }
+    }catch (const std::exception& e){
+        statusCode = drogon::k500InternalServerError;
+    }
+
+    // JSONレスポンスを作成して返す
+    auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
+    resp->setStatusCode(statusCode);
+    callback(resp);
+};
+
+void adminController::setDishGlipperDo(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback,std::string action){
+    drogon::HttpStatusCode statusCode=drogon::k200OK;
+    Json::Value jsonResponse;
+    try {
+        if (action == "standby") {
+            commonData::servoClient->sendAngle(commonData::dishStandby,true);
+        }
+        if (action == "close") {
+            commonData::servoClient->sendAngle(commonData::dishClose,true);
+        }
+        if (action == "open") {
+            commonData::servoClient->sendAngle(commonData::dishOpen,true);
         }
     }catch (const std::exception& e){
         statusCode = drogon::k500InternalServerError;
@@ -194,6 +234,9 @@ void adminController::getAdminProps(const drogon::HttpRequestPtr &req,
     jsonResponse["glip"]["standby"] = commonData::standby;
     jsonResponse["glip"]["close"] = commonData::close;
     jsonResponse["glip"]["open"] = commonData::open;
+    jsonResponse["glip"]["dish"]["standby"] = commonData::dishStandby;
+    jsonResponse["glip"]["dish"]["close"] = commonData::dishClose;
+    jsonResponse["glip"]["dish"]["open"] = commonData::dishOpen;
 
     jsonResponse["image"]["scale"] = commonData::scale;
 

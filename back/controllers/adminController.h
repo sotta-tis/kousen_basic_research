@@ -31,12 +31,15 @@ public:
         ADD_METHOD_TO(adminController::setImageLocation, "/admin/dobot/set/img/location", Get);
         ADD_METHOD_TO(adminController::setGlipperHost, "/admin/glipper/set", Get);
         ADD_METHOD_TO(adminController::setGlipperInitial, "/admin/glipper/initial", Get);
+        ADD_METHOD_TO(adminController::setDishGlipperInitial, "/admin/glipper/initial/dish", Get);
         ADD_METHOD_TO(adminController::setGlipperDo, "/admin/glipper/do/{action}", Get);
+        ADD_METHOD_TO(adminController::setDishGlipperDo, "/admin/glipper/dish/{action}", Get);
         ADD_METHOD_TO(adminController::setImagePointCoordinate, "/admin/image/coordinate", Get);
         ADD_METHOD_TO(adminController::setReleasePointCoordinate, "/admin/release", Get);
         ADD_METHOD_TO(adminController::setSushiZoneMaxCoordinate, "/admin/zone/max", Get);
         ADD_METHOD_TO(adminController::setSushiZoneMinCoordinate, "/admin/zone/min", Get);
         ADD_METHOD_TO(adminController::setSushiZoneHeight, "/admin/zone/height", Get);
+        ADD_METHOD_TO(adminController::shutDown, "/admin/kill", Get);
     METHOD_LIST_END
 
     // システムシャットダウン
@@ -57,7 +60,9 @@ public:
 
     void setGlipperHost(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
     void setGlipperInitial(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
+    void setDishGlipperInitial(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
     void setGlipperDo(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback,std::string action);
+    void setDishGlipperDo(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback,std::string action);
 
     void getAdminProps(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);
     void getImage(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback);

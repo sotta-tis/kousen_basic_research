@@ -22,6 +22,9 @@ namespace commonData{
     extern int standby;
     extern int close ;
     extern int open ;
+    extern int dishStandby;
+    extern int dishClose ;
+    extern int dishOpen ;
 
     extern std::string DOBOT_HOST;
     extern int DOBOT_PORT;

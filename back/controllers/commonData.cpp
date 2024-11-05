@@ -23,6 +23,10 @@ namespace commonData{
      int close = 0;
      int open = 0;
 
+     int dishStandby = 0;
+     int dishClose = 0;
+     int dishOpen = 0;
+
     std::string DOBOT_HOST="--";
     int DOBOT_PORT=0;
 
