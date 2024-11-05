@@ -54,6 +54,11 @@ namespace commonData{
     int IMAGE_z =0;
     int IMAGE_r =0;
 
+    int INITIAL_x =0;
+    int INITIAL_y =0;
+    int INITIAL_z =0;
+    int INITIAL_r =0;
+
     int DISH_x = 0;
     int DISH_y = 0;
     int DISH_z = 0;
@@ -319,8 +324,8 @@ namespace commonData{
                                 {5,0},
                                 {6,0}
                         };
-                        sushiCount -=1;
-
+                        sushiCount = 0;
+                        sockC::moveArmParam(INITIAL_x,INITIAL_y,INITIAL_z,INITIAL_r,commonData::DOBOT_HOST,commonData::DOBOT_PORT);
                         cv::Mat image= commonData::cropImage(commonData::getImageFromCameraOrPath("aa"),320,320,commonData::scale);
                         commonData::objectDetection(image,"http://127.0.0.1:8881");
                     }catch (std::exception& e){

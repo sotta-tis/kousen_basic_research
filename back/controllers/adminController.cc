@@ -239,6 +239,11 @@ void adminController::getAdminProps(const drogon::HttpRequestPtr &req,
     jsonResponse["location"]["dRelease"]["z"] = commonData::RELEASE_DISH_z;
     jsonResponse["location"]["dRelease"]["r"] = commonData::RELEASE_DISH_r;
 
+    jsonResponse["location"]["initial"]["x"] = commonData::INITIAL_x;
+    jsonResponse["location"]["initial"]["y"] = commonData::INITIAL_y;
+    jsonResponse["location"]["initial"]["z"] = commonData::INITIAL_z;
+    jsonResponse["location"]["initial"]["r"] = commonData::INITIAL_r;
+
     jsonResponse["glip"]["host"] = adminController::SERVO_HOST;
     jsonResponse["glip"]["port"] = adminController::SERVO_PORT;
     jsonResponse["glip"]["standby"] = commonData::standby;
@@ -391,6 +396,21 @@ void adminController::setImagePointCoordinate(const HttpRequestPtr& req, std::fu
         commonData::IMAGE_y = std::stoi(req->getParameter("y"));
         commonData::IMAGE_z = std::stoi(req->getParameter("z"));
         commonData::IMAGE_r = std::stoi(req->getParameter("r"));
+    }catch (const std::exception& e) {
+        statusCode= drogon::k500InternalServerError;
+    }
+    auto resp = HttpResponse::newHttpJsonResponse(jsonResponse);
+    resp->setStatusCode(statusCode);
+    callback(resp);
+}
+void adminController::setInitialPointCoordinate(const HttpRequestPtr& req, std::function<void (const HttpResponsePtr &)> &&callback){
+    drogon::HttpStatusCode statusCode=drogon::k200OK;
+    Json::Value jsonResponse;
+    try{
+        commonData::INITIAL_x = std::stoi(req->getParameter("x"));
+        commonData::INITIAL_y = std::stoi(req->getParameter("y"));
+        commonData::INITIAL_z = std::stoi(req->getParameter("z"));
+        commonData::INITIAL_r = std::stoi(req->getParameter("r"));
     }catch (const std::exception& e) {
         statusCode= drogon::k500InternalServerError;
     }
