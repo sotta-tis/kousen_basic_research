@@ -19,7 +19,7 @@ bool isDish = false;
 void setup() {
     Serial.begin(115200);
     myservo.attach(servoPin);
-    dishServo.attch(dishServoPin);
+    dishServo.attach(dishServoPin);
 
     // WiFi接続
     WiFi.begin(ssid, password);

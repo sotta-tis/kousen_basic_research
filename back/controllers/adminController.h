@@ -11,7 +11,7 @@ private:
     std::string DOBOT_HOST="";
     int DOBOT_PORT=-1;
 
-    std::string SERVO_HOST="";
+    std::string SERVO_HOST="--";
     int SERVO_PORT=-1;
 
     int standby = 0;
