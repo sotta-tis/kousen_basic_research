@@ -19,6 +19,9 @@ type ConnectionFormProps = {
   standby: string;
   open: string;
   close: string;
+  dishStandby: string;
+  dishOpen: string;
+  dishClose: string;
 };
 
 const GlipperSetting = ({
@@ -27,6 +30,9 @@ const GlipperSetting = ({
   standby,
   open,
   close,
+  dishStandby,
+  dishOpen,
+  dishClose,
 }: ConnectionFormProps) => {
   // ステートを使って入力値を管理
   const [currentIpAddress, setCurrentIpAddress] = useState(ipAddress);
@@ -34,6 +40,9 @@ const GlipperSetting = ({
   const [initialStandby, setInitialStandby] = useState(standby);
   const [initialOpen, setInitialOpen] = useState(open);
   const [initialClose, setInitialClose] = useState(close);
+  const [initialDishStandby, setInitialDishStandby] = useState(dishStandby);
+  const [initialDishOpen, setInitialDishOpen] = useState(dishOpen);
+  const [initialDishClose, setInitialDishClose] = useState(dishClose);
   const [jsonResponse, setJsonResponse] = useState(null);
   const [error, setError] = useState(null);
 
@@ -85,6 +94,34 @@ const GlipperSetting = ({
     try {
       // クエリパラメータでリクエストしたいURLを指定
       const urlToFetch = `${process.env.NEXT_PUBLIC_BACKEND_API_ENDPOINT}/admin/glipper/initial?${queryParams}`;
+      const response = await fetch(
+        `/api/proxy?url=${encodeURIComponent(urlToFetch)}`
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch data: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      setJsonResponse(data);
+    } catch (error) {
+      setError(error.message);
+    }
+  };
+
+  const handleInitalDishSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    const params = new URLSearchParams();
+    // Stateから直接URLSearchParamsに追加
+    params.append("standby", initialDishStandby);
+    params.append("open", initialDishOpen);
+    params.append("close", initialDishClose);
+
+    const queryParams = params.toString();
+    try {
+      // クエリパラメータでリクエストしたいURLを指定
+      const urlToFetch = `${process.env.NEXT_PUBLIC_BACKEND_API_ENDPOINT}/admin/glipper/initial/dish?${queryParams}`;
       const response = await fetch(
         `/api/proxy?url=${encodeURIComponent(urlToFetch)}`
       );
@@ -190,7 +227,63 @@ const GlipperSetting = ({
         </HStack>
 
         <Button type="submit" colorScheme="teal" mt={4}>
-          Submit
+          寿司アーム
+        </Button>
+      </Box>
+
+      <Box as="form" id="initialPosForm" onSubmit={handleInitalDishSubmit}>
+        <HStack spacing={3}>
+          <FormControl>
+            <NumberInput
+              id="standby"
+              value={initialDishStandby}
+              onChange={(valueString) => setInitialDishStandby(valueString)}
+              min={1}
+              max={65535}
+            >
+              <NumberInputField placeholder="Enter X" />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          </FormControl>
+
+          <FormControl>
+            <NumberInput
+              id="close"
+              value={initialDishClose}
+              onChange={(valueString) => setInitialDishClose(valueString)}
+              min={1}
+              max={65535}
+            >
+              <NumberInputField placeholder="Enter Z" />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          </FormControl>
+
+          <FormControl>
+            <NumberInput
+              id="open"
+              value={initialDishOpen}
+              onChange={(valueString) => setInitialDishOpen(valueString)}
+              min={1}
+              max={65535}
+            >
+              <NumberInputField placeholder="Enter Y" />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+          </FormControl>
+        </HStack>
+
+        <Button type="submit" colorScheme="teal" mt={4}>
+          皿アーム
         </Button>
       </Box>
     </>

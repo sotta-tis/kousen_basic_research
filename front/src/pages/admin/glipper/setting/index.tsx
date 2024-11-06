@@ -14,6 +14,9 @@ const Home = ({ serverData }): JSX.Element => {
         standby={serverData.glip.standby}
         open={serverData.glip.open}
         close={serverData.glip.close}
+        dishClose={serverData.glip.dish.standby}
+        dishOpen={serverData.glip.dish.open}
+        dishStandby={serverData.glip.dish.standby}
       />
     </AdminLayout>
   );

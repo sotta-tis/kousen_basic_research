@@ -23,6 +23,14 @@ const Home = ({ serverData }): JSX.Element => {
         rlsX={serverData.location.release.x}
         rlsY={serverData.location.release.y}
         rlsZ={serverData.location.release.z}
+        dishX={serverData.location.dish.x}
+        dishY={serverData.location.dish.y}
+        dishR={serverData.location.dish.r}
+        dishZ={serverData.location.dish.z}
+        dishRlsR={serverData.location.dRelease.r}
+        dishRlsX={serverData.location.dRelease.x}
+        dishRlsY={serverData.location.dRelease.y}
+        dishRlsZ={serverData.location.dRelease.z}
       />
     </AdminLayout>
   );
