@@ -11,8 +11,8 @@ WiFiServer server(80);
 // サーボモーター設定
 Servo myservo;
 Servo dishServo;
-int servoPin = 18;  // サーボモーター制御ピン
-int dishServoPin = 19;
+int servoPin = 22;  // サーボモーター制御ピン
+int dishServoPin = 23;
 
 bool isDish = false;
 
